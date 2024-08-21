@@ -2861,6 +2861,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/slider@npm:4.4.2":
+  version: 4.4.2
+  resolution: "@react-native-community/slider@npm:4.4.2"
+  checksum: 1ae613f594a8ea9d7243b3125d26b36aab4e4c2dd9eba1bf66c4f31878e74fae055cd35a1babc46b262240885bb61fa321610417bb2a6d9f77a330136ff33293
+  languageName: node
+  linkType: hard
+
 "@react-native/assets@npm:1.0.0":
   version: 1.0.0
   resolution: "@react-native/assets@npm:1.0.0"
@@ -4196,6 +4203,7 @@ __metadata:
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
     "@react-native-community/eslint-config": ^3.2.0
+    "@react-native-community/slider": 4.4.2
     "@react-three/drei": ^9.111.0
     "@react-three/fiber": ^8.17.5
     "@tsconfig/react-native": ^2.0.2
