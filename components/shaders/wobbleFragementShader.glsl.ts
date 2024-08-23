@@ -1,10 +1,14 @@
 const SHADER = /*glsl*/ `
+float rand(vec2 p){return fract(cos(dot(p,vec2(23.,2.)))*12345.);}
+
+      #define BLACK vec3(0.0, 0.0, 0.0)
       uniform float uTime;
       uniform sampler2D uPerlinTexture;
       varying vec2 vUv;
       uniform vec3 uBlobColor;
       uniform float uSmokeSize;
       uniform float isAngry;
+      uniform float opc;
 
       void main()
       {
@@ -15,7 +19,8 @@ const SHADER = /*glsl*/ `
           smokeUv.y -= uTime * 0.03;
 
           // Smoke
-          float smoke = texture(uPerlinTexture, smokeUv).r;
+          vec4 smpl = texture(uPerlinTexture, smokeUv);
+          float smoke = smpl.r;
           smoke *= uSmokeSize;
           // Remap
           smoke = smoothstep(0.4, 1.0, smoke);
@@ -25,14 +30,12 @@ const SHADER = /*glsl*/ `
           smoke *= smoothstep(1.0, 0.9, vUv.x);
           smoke *= smoothstep(0.0, 0.1, vUv.y);
           smoke *= smoothstep(1.0, 0.4, vUv.y);
-
-          // Final color
-            gl_FragColor = vec4(uBlobColor , smoke);
           
-          // #include <tonemapping_fragment>
-          // #include <colorspace_fragment>
-        // gl_FragColor = vec4(vUv,1.0,1.0);
-        //  gl_FragColor = vec4(0.33, 0.48, 0.79, 1.0);
+          float dist = distance(vUv, vec2(0.5)); // Calculate distance from center
+          vec3 finalColor = mix(uBlobColor* 1.5, uBlobColor , dist);
+          vec3 oblivion = BLACK;
+          
+          gl_FragColor = vec4((finalColor*max(rand(vUv), vUv.y)), (smoke*2.0) - opc);
       }
     `;
 

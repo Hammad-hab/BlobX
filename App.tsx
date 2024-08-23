@@ -96,7 +96,7 @@ const App = () => {
         camera={{position: [0, 0, -5]}}
         // eslint-disable-next-line react-native/no-inline-styles
         style={{backgroundColor: 'black'}}>
-          <OrbitControls/>
+          {/* <OrbitControls/> */}
         <Suspense>
           <Fluid
            // Red_Sphere_one={Red_Sphere_one ? Red_Sphere_one : 1.0}
@@ -106,21 +106,24 @@ const App = () => {
           //  Red_Sphere_two={Red_Sphere_two ? Red_Sphere_two : 1.0}
           //  Green_Sphere_two={Green_Sphere_two ? Green_Sphere_two : 0.0}
           //  Blue_Sphere_two={Blue_Sphere_two ? Blue_Sphere_two : 0.0}
-           gesture={'None'}
-           // emote={'Happy'}
-        // emote={'None'}
-           // emote={'Angry'}
-           // emote={'Serious'}
-            emote={'Interogative'}
+          gesture={'None'}
+        // gesture={'HeadShake'}
+          // gesture={'Nod'}
+         // gesture={'ShakeAnger'}
+        // emote={'Happy'}
+      emote={'None'}
+      // emote={'Angry'}
+    //  emote={'Serious'}
+          //  emote={'Interogative'}
           //  Red_Sphere_three={Red_Sphere_three ? Red_Sphere_three : 0.0}
           //  Green_Sphere_three={Green_Sphere_three ? Green_Sphere_three : 1.0}
           // Blue_Sphere_three={Blue_Sphere_three ? Blue_Sphere_three : 0.0}
 
-            text="Lorem ipsum dolor amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-            rotationSpeed={1.0}
+            text="Lorem dolor amet, adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            rotationSpeed={0.75}
            // color={colorValue}
            enableRandomness
-            length={5000}
+            length={34000}
           />
         </Suspense>
       </Canvas>

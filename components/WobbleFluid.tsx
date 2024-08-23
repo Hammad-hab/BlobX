@@ -15,7 +15,7 @@ import animateText from './TextAnimation';
 interface FluidProps {
   text: string;
   rotationSpeed: number;
-  emote: 'Angry' | 'Happy' | 'Serious' | 'Interogative'|'None';
+  emote: 'Angry' | 'Happy' | 'Serious' | 'Interogative' | 'None';
   length: number;
   gesture?: 'Nod' | 'HeadShake' | 'None' | 'Wink' | 'ShakeAnger';
   // Debug Parameters
@@ -35,7 +35,9 @@ interface FluidProps {
 
   dangerousEmotionStateAccessCallback?: (
     x: React.Dispatch<
-      React.SetStateAction<'Angry' | 'Happy' | 'Serious' | 'Interogative'|'None'>
+      React.SetStateAction<
+        'Angry' | 'Happy' | 'Serious' | 'Interogative' | 'None'
+      >
     >,
   ) => void;
   dangerousMatStateAccessCallback?: (x: MaterialContainer) => void;
@@ -105,10 +107,11 @@ export default function Fluid(props: FluidProps) {
           /*Data passed to the shader from the CPU, is a uniform */
           uTime: new THREE.Uniform(0),
           uPerlinTexture: new THREE.Uniform(perlinTexture),
-          uBlobColor: new THREE.Uniform(new THREE.Vector3(0.0, 0.0, 1.0)),
+          uBlobColor: new THREE.Uniform(new THREE.Vector3(0.13, 0.6, 0.89)),
           uSmokeSize: new THREE.Uniform(1.0),
           Color_red: new THREE.Uniform(1.0),
           isAngry: new THREE.Uniform(1.0),
+          opc: new THREE.Uniform(0.05),
         },
         side: THREE.DoubleSide,
         transparent: true,
@@ -120,51 +123,72 @@ export default function Fluid(props: FluidProps) {
   containerMat.addMaterials(atmosphereMaterial);
   containerMat.createMatUniformVariation(
     0,
-    new THREE.Vector3(0.8, 0.0, 0.0),
+    new THREE.Vector3(0.86, 0.2, 0.27),
     'uBlobColor',
   );
   containerMat.createMatUniformVariation(
     0,
-    new THREE.Vector3(0.0, 1.0, 0.0),
+    new THREE.Vector3(0, 0.42, 0.18),
     'uBlobColor',
   );
-  containerMat.setUniformAt(1, 1.015, 'uSmokeSize');
+  containerMat.createMatUniformVariation(
+    0,
+    new THREE.Vector3(0.97, 0.52, 0.15),
+    'uBlobColor',
+  );
+  containerMat.createMatUniformVariation(
+    0,
+    new THREE.Vector3(0.94, 0.6, 0.22),
+    'uBlobColor',
+  );
+  // containerMat.setUniformAt(1, 2., 'uSmokeSize');
+  // containerMat.setUniformAt(0, 0.1, 'uSmokeSize');
 
   if (props.dangerousMatStateAccessCallback) {
     props.dangerousMatStateAccessCallback(containerMat);
   }
 
   useFrame(() => {
+
     if (IncRadius) {
       if (props.emote === 'Angry') {
         //    IncScale();
         containerMat.setNewRed(0, 'uBlobColor', 1.0, 0.0, 0.0);
         containerMat.setNewRed(1, 'uBlobColor', 1.0, 0.0, 0.0);
         containerMat.setNewRed(2, 'uBlobColor', 1.0, 0.0, 0.0);
+        containerMat.setNewRed(3, 'uBlobColor', 1.0, 0.0, 0.0);
+        containerMat.setNewRed(4, 'uBlobColor', 1.0, 0.0, 0.0);
       } else if (props.emote === 'Interogative') {
         //   IncScale();
         containerMat.setNewRed(0, 'uBlobColor', 0.0, 0.0, 1.0);
         containerMat.setNewRed(1, 'uBlobColor', 0.0, 0.0, 1.0);
         containerMat.setNewRed(2, 'uBlobColor', 0.0, 0.0, 1.0);
+        containerMat.setNewRed(3, 'uBlobColor', 0.0, 0.0, 1.0);
+        containerMat.setNewRed(4, 'uBlobColor', 0.0, 0.0, 1.0);
       } else if (props.emote === 'Happy') {
         //   IncScale();
-        containerMat.setNewRed(0, 'uBlobColor', 1.00, 0.85, 0.00);
-        containerMat.setNewRed(1, 'uBlobColor', 1.00, 0.85, 0.00);
-        containerMat.setNewRed(2, 'uBlobColor', 1.00, 0.85, 0.00);
+        containerMat.setNewRed(0, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewRed(1, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewRed(2, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewRed(4, 'uBlobColor', 1.0, 0.85, 0.0);
       }
       //   DecScale();
     } else {
-      const color_1 = new THREE.Vector3(0.0, 0.0, 1.0);
-      const color_2 = new THREE.Vector3(0.8, 0.0, 0.0);
-      const color_3 = new THREE.Vector3(0.0, 1.0, 0.0);
+      const color_1 = new THREE.Vector3(0.13, 0.6, 0.89);
+      const color_2 = new THREE.Vector3(0.86, 0.2, 0.27);
+      const color_3 = new THREE.Vector3(0, 0.42, 0.18);
+      const color_4 = new THREE.Vector3(0.97, 0.52, 0.15);
+      const color_5 = new THREE.Vector3(0.94, 0.6, 0.22);
       containerMat.setNewRed(0, 'uBlobColor', color_1.x, color_1.y, color_1.z);
       containerMat.setNewRed(1, 'uBlobColor', color_2.x, color_2.y, color_2.z);
       containerMat.setNewRed(2, 'uBlobColor', color_3.x, color_3.y, color_3.z);
+      containerMat.setNewRed(3, 'uBlobColor', color_4.x, color_4.y, color_4.z);
+      containerMat.setNewRed(3, 'uBlobColor', color_5.x, color_5.y, color_5.z);
     }
   });
 
-
   let damping = new THREE.Vector3(1, 1, 1);
+  let t = 0.0;
 
   useEffect(() => {
     sampler.current = 0;
@@ -173,7 +197,7 @@ export default function Fluid(props: FluidProps) {
   useFrame(() => {
     /**Render loop */
     if (!isSpeaking) {
-      const target = new THREE.Vector3(0, 0, 0);
+      const target = new THREE.Vector3(0.2, 0.2, 0.2);
       const targetScale = new THREE.Vector3(1, 1, 1);
       damping.lerp(target, 0.01);
       containerMat.setUniformAtI(
@@ -189,6 +213,16 @@ export default function Fluid(props: FluidProps) {
       containerMat.setUniformAtI(
         2,
         0.3 * props.rotationSpeed * damping.x,
+        'uTime',
+      );
+      containerMat.setUniformAtI(
+        3,
+        0.25 * props.rotationSpeed * damping.x,
+        'uTime',
+      );
+      containerMat.setUniformAtI(
+        4,
+        0.35 * props.rotationSpeed * damping.x,
         'uTime',
       );
       Body.current?.scale.lerp(targetScale, 0.01);
@@ -215,6 +249,16 @@ export default function Fluid(props: FluidProps) {
       'uTime',
     );
 
+    containerMat.setUniformAtI(
+      3,
+      0.25 * props.rotationSpeed * damping.x,
+      'uTime',
+    );
+    containerMat.setUniformAtI(
+      4,
+      0.35 * props.rotationSpeed * damping.x,
+      'uTime',
+    );
     // Don't touch
     const rnd = props.enableRandomness ? Math.random() - 0.5 : 0.0;
     const alpha = 0.05;
@@ -232,6 +276,8 @@ export default function Fluid(props: FluidProps) {
       const targetScale = new THREE.Vector3(1.25 + rnd, 1.25 + rnd, 1.25 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
     }
+    // Body.current!.position.y = Math.max((Math.cos(Math.PI * t)), 0.3) -0.3;
+    t += 0.01;
   });
 
   return (
@@ -243,25 +289,43 @@ export default function Fluid(props: FluidProps) {
           ref={layerInner}
           material={containerMat.getMaterial(0)}
           position={[0, 0, 0]}
-          rotation={[0, -7.84, -9.42]}
+          rotation={[0, -4.84, -5.42]}
         >
-          <icosahedronGeometry args={[0.4, 50]} />
+          <icosahedronGeometry args={[0.675, 50]} />
+        </mesh>
+
+        <mesh
+          ref={layerInner}
+          material={containerMat.getMaterial(4)}
+          position={[0, 0, 0]}
+          rotation={[0, -4.84, -5.42]}
+        >
+          <icosahedronGeometry args={[0.575, 50]} />
         </mesh>
 
         <mesh
           ref={layerOuter}
           material={containerMat.getMaterial(1)}
           position={[0, 0, 0]}
-          rotation={[0, -7.84, -9.42]}
+          rotation={[0, -9.84, -2.42]}
         >
           <icosahedronGeometry args={[0.7, 50]} />
+        </mesh>
+
+        <mesh
+          ref={layerOuter}
+          material={containerMat.getMaterial(3)}
+          position={[0, 0, 0]}
+          rotation={[0, 0, 0]}
+        >
+          <icosahedronGeometry args={[0.6, 50]} />
         </mesh>
 
         <mesh
           ref={layerInnerMost}
           material={containerMat.getMaterial(2)}
           position={[0, 0, 0]}
-          rotation={[0, -7.84, -9.42]}
+          rotation={[0, -6.84, -9.42]}
         >
           <icosahedronGeometry args={[0.6, 50]} />
         </mesh>
@@ -269,6 +333,8 @@ export default function Fluid(props: FluidProps) {
         <AIEyes
           emotion={props.emote}
           gesture={props.gesture}
+          shouldEnableEyeBrows={false}
+          stareAt="None"
         />
       </group>
     </>

@@ -243,6 +243,9 @@ const AIEyes = (props: AIEyesProps) => {
     EyeRefR_Serious.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
     EyeRefL_Serious.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
   }
+  // function BeInterrogative () {
+
+  // }
   function BeNormal() {
     EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
     EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
@@ -251,8 +254,9 @@ const AIEyes = (props: AIEyesProps) => {
     EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
     EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
   }
+
   useFrame(() => {
-    if (browsShouldLerp) {
+    if (browsShouldLerp && props.shouldEnableEyeBrows) {
       switch (props.emotion) {
         case 'Happy':
           // unLerpAngerEyebrows();
@@ -261,6 +265,32 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeNormal();
           DontBeSerious();
           BeHappy();
+          // const oldVectorL_Hpy = EyeBrowRefL.current.position;
+          // const oldVectorR_Hpy = EyeBrowRefR.current.position;
+          // const newVectorR_Hpy = new THREE.Vector3(0.15, -0.06, -0.75);
+          // const newVectorL_Hpy = new THREE.Vector3(-0.15, -0.06, -0.75);
+          // oldVectorL_Hpy.copy(newVectorL_Hpy);
+          // oldVectorR_Hpy.copy(newVectorR_Hpy);
+          // EyeRefNormalL.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefNormalR.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeBrowRefL.current.scale.lerp(new THREE.Vector3(0.0, 0.1, 0.1), 0.1);
+          // EyeBrowRefR.current.scale.lerp(new THREE.Vector3(0.0, 0.1, 0.1), 0.1);
+          // // EyeRefR_Happy.current.scale.lerp(
+          // //   new THREE.Vector3(1.0, 1.0, 1.0),
+          // //   0.1,
+          // // );
+          // // EyeRefL_Happy.current.scale.lerp(
+          // //   new THREE.Vector3(1.0, 1.0, 1.0),
+          // //   0.1,
+          // // );
+          // EyeBrowRefLD.current.scale.lerp(new THREE.Vector3(0.7, 1, 1), 0.1);
+          // EyeBrowRefRD.current.scale.lerp(new THREE.Vector3(0.7, 1, 1), 0.1);
           AIState.current = 'Happy';
 
           break;
@@ -271,16 +301,77 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeNormal();
           DontBeSerious();
           DontBeHappy();
+          // EyeRefNormalL.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefNormalR.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefR_Happy.current.scale.lerp(
+          //   new THREE.Vector3(1.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          // EyeRefL_Happy.current.scale.lerp(
+          //   new THREE.Vector3(1.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          // EyeBrowRefLD.current.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1);
+          // EyeBrowRefRD.current.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1);
+          // EyeBrowRefL.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
+          // EyeBrowRefR.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
+          // const oldVectorR_Ingv = EyeBrowRefR.current.position;
+          // const oldVectorL_Ingv = EyeBrowRefL.current.position;
+          // const newVectorR_Ingv = new THREE.Vector3(-0.15, 0.2, -0.75);
+          // const newVectorL_Ingv = new THREE.Vector3(0.15, 0.1, -0.75);
+          // oldVectorR_Ingv.lerp(newVectorR_Ingv, 0.1);
+          // oldVectorL_Ingv.lerp(newVectorL_Ingv, 0.1);
           AIState.current = 'Interogative';
 
           break;
 
         case 'Serious':
-          DontBeAngry();
-          DontBeNormal();
-          BeSerious();
-          DontBeHappy();
-          unLerpAngerEyebrows();
+          // DontBeAngry();
+          // DontBeNormal();
+          // BeSerious();
+          // DontBeHappy();
+          // unLerpAngerEyebrows();
+          //resetPosition();
+          // EyeRefL_Happy.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefR_Happy.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefNormalL.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefNormalR.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefR_Serious.current.scale.lerp(
+          //   new THREE.Vector3(1.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          // EyeRefL_Serious.current.scale.lerp(
+          //   new THREE.Vector3(1.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          // EyeBrowRefLD.current.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1);
+          // EyeBrowRefRD.current.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1);
+          // EyeBrowRefL.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
+          // EyeBrowRefR.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
+          // const oldVectorL_Srs = EyeBrowRefL.current.position;
+          // const oldVectorR_Srs = EyeBrowRefR.current.position;
+          // const newVectorR_Srs = new THREE.Vector3(0.15, 0.1, -0.75);
+          // const newVectorL_Srs = new THREE.Vector3(-0.15, 0.1, -0.75);
+          // oldVectorL_Srs.lerp(newVectorR_Srs, 0.1);
+          // oldVectorR_Srs.lerp(newVectorL_Srs, 0.1);
           AIState.current = 'Serious';
 
           break;
@@ -290,6 +381,33 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeNormal();
           DontBeSerious();
           DontBeHappy();
+          // EyeRefNormalL.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefNormalR.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefR_Happy.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          // EyeRefL_Happy.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          //BeAngry()
+          // EyeBrowRefLD.current.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1);
+          // EyeBrowRefRD.current.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1);
+          // EyeBrowRefL.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
+          // EyeBrowRefR.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
+          // const oldVectorL_Pos = EyeBrowRefL.current.position;
+          // const oldVectorR_Pos = EyeBrowRefR.current.position;
+          // const newVectorR_Pos = new THREE.Vector3(0.15, 0.1, -0.75);
+          // const newVectorL_Pos = new THREE.Vector3(-0.15, 0.1, -0.75);
+          // oldVectorL_Pos.lerp(newVectorR_Pos, 0.1);
+          // oldVectorR_Pos.lerp(newVectorL_Pos, 0.1);
           LerpAngerEyebrows();
           AIState.current = 'Angry';
           break;
@@ -300,11 +418,77 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeSerious();
           DontBeHappy();
           unLerpAngerEyebrows();
+          // EyeRefR_Serious.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefR_Serious.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefNormalL.current.scale.lerp(
+          //   new THREE.Vector3(1.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          // EyeRefNormalR.current.scale.lerp(
+          //   new THREE.Vector3(1.0, 1.0, 1.0),
+          //   0.1,
+          // );
+          // EyeBrowRefL.current.scale.lerp(new THREE.Vector3(0.0, 0.1, 0.1), 0.1);
+          // EyeBrowRefR.current.scale.lerp(new THREE.Vector3(0.0, 0.1, 0.1), 0.1);
+          // EyeRefL_Happy.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeRefR_Happy.current.scale.lerp(
+          //   new THREE.Vector3(0.0, 0.0, 0.0),
+          //   0.1,
+          // );
+          // EyeBrowRefLD.current.scale.lerp(new THREE.Vector3(0.7, 1, 1), 0.1);
+          // EyeBrowRefRD.current.scale.lerp(new THREE.Vector3(0.7, 1, 1), 0.1);
           AIState.current = 'None';
+          // const oldVectorL_Pos = EyeBrowRefL.current.position;
+          // const oldVectorR_Pos = EyeBrowRefR.current.position;
+          // const newVectorR_Pos = new THREE.Vector3(0.15, 0.1, -0.75);
+          // const newVectorL_Pos = new THREE.Vector3(-0.15, 0.1, -0.75);
+          // oldVectorL_Pos.lerp(newVectorR_Pos, 0.1);
+          // oldVectorR_Pos.lerp(newVectorL_Pos, 0.1);
+          // LerpAngerEyebrows();
+          //AIState.current = 'Angry';
           break;
       }
+      // AIState.current = props.emotion;
     }
+    // if (props.gesture === "HeadShake") {
+
+    // }
+    // if (props.gesture === "HeadShake") {
+    // }
   });
+  // const [isWinking, setIsWinking] = useState(false);
+  // const [winkProgress, setWinkProgress] = useState(0);
+
+  // useFrame((state, delta) => {
+  //   if (EyeRefR_Happy.current) {
+  //     if (isWinking) {
+  //       setWinkProgress(prev => prev + delta);
+  //       if (winkProgress >= 1) {
+  //         setIsWinking(false);
+  //         setWinkProgress(0);
+  //       }
+  //       EyeRefR_Happy.current.scale.lerp(new THREE.Vector3(1, 0, 1), winkProgress);
+  //     } else {
+  //       EyeRefR_Happy.current.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
+  //     }
+  //   }
+  // });
+
+  // const handleWink = () => {
+  //   setIsWinking(true);
+  // };
+  // setInterval(() => {
+  //   handleWink();
+  // }, 6000);
   useFrame((state: any) => {
     const tm = state.clock.getElapsedTime();
 
@@ -398,13 +582,13 @@ const AIEyes = (props: AIEyesProps) => {
 
         <mesh
           geometry={EyeGeometry}
-          position={[0.15, 0.06, -0.7]}
+          position={[0.15, 0, -0.7]}
           material={EyeMaterial}
           ref={EyeRefNormalL}
         />
         <mesh
           geometry={EyeGeometry}
-          position={[-0.15, 0.06, -0.7]}
+          position={[-0.15, 0, -0.7]}
           material={EyeMaterial}
           ref={EyeRefNormalR}
         />
@@ -416,6 +600,7 @@ const AIEyes = (props: AIEyesProps) => {
           scale={new THREE.Vector3(0.001, 0.001, 0.001)}
           material={EyeMaterial}
           ref={EyeRefL_Happy}
+          visible={false}
         />
         <mesh
           //rotateX={Math.PI / 2}
@@ -425,6 +610,7 @@ const AIEyes = (props: AIEyesProps) => {
           scale={new THREE.Vector3(0.001, 0.001, 0.001)}
           material={EyeMaterial}
           ref={EyeRefR_Happy}
+          visible={false}
         />
         <mesh
           //rotateX={Math.PI / 2}
@@ -455,6 +641,7 @@ const AIEyes = (props: AIEyesProps) => {
           scale={new THREE.Vector3(0.01, 0.01, 0.01)}
           material={EyeMaterial}
           ref={EyeRefR_Angry}
+          visible={false}
         />
 
         <mesh
@@ -465,6 +652,7 @@ const AIEyes = (props: AIEyesProps) => {
           scale={new THREE.Vector3(0.01, 0.01, 0.01)}
           material={EyeMaterial}
           ref={EyeRefL_Angry}
+          visible={false}
           // ref={EyeRef _Angry}
         />
       </group>
