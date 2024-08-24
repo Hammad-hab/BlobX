@@ -148,24 +148,24 @@ export default function Fluid(props: FluidProps) {
     if (IncRadius) {
       if (props.emote === 'Angry') {
         //    IncScale();
-        containerMat.setNewRed(0, 'uBlobColor', 1.0, 0.0, 0.0);
-        containerMat.setNewRed(1, 'uBlobColor', 1.0, 0.0, 0.0);
-        containerMat.setNewRed(2, 'uBlobColor', 1.0, 0.0, 0.0);
-        containerMat.setNewRed(3, 'uBlobColor', 1.0, 0.0, 0.0);
-        containerMat.setNewRed(4, 'uBlobColor', 1.0, 0.0, 0.0);
+        containerMat.setNewColor(0, 'uBlobColor', 1.0, 0.0, 0.0);
+        containerMat.setNewColor(1, 'uBlobColor', 1.0, 0.0, 0.0);
+        containerMat.setNewColor(2, 'uBlobColor', 1.0, 0.0, 0.0);
+        containerMat.setNewColor(3, 'uBlobColor', 1.0, 0.0, 0.0);
+        containerMat.setNewColor(4, 'uBlobColor', 1.0, 0.0, 0.0);
       } else if (props.emote === 'Interogative') {
         //   IncScale();
-        containerMat.setNewRed(0, 'uBlobColor', 0.0, 0.0, 1.0);
-        containerMat.setNewRed(1, 'uBlobColor', 0.0, 0.0, 1.0);
-        containerMat.setNewRed(2, 'uBlobColor', 0.0, 0.0, 1.0);
-        containerMat.setNewRed(3, 'uBlobColor', 0.0, 0.0, 1.0);
-        containerMat.setNewRed(4, 'uBlobColor', 0.0, 0.0, 1.0);
+        containerMat.setNewColor(0, 'uBlobColor', 0.0, 0.0, 1.0);
+        containerMat.setNewColor(1, 'uBlobColor', 0.0, 0.0, 1.0);
+        containerMat.setNewColor(2, 'uBlobColor', 0.0, 0.0, 1.0);
+        containerMat.setNewColor(3, 'uBlobColor', 0.0, 0.0, 1.0);
+        containerMat.setNewColor(4, 'uBlobColor', 0.0, 0.0, 1.0);
       } else if (props.emote === 'Happy') {
         //   IncScale();
-        containerMat.setNewRed(0, 'uBlobColor', 1.0, 0.85, 0.0);
-        containerMat.setNewRed(1, 'uBlobColor', 1.0, 0.85, 0.0);
-        containerMat.setNewRed(2, 'uBlobColor', 1.0, 0.85, 0.0);
-        containerMat.setNewRed(4, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewColor(0, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewColor(1, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewColor(2, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewColor(4, 'uBlobColor', 1.0, 0.85, 0.0);
       }
       //   DecScale();
     } else {
@@ -174,11 +174,11 @@ export default function Fluid(props: FluidProps) {
       const color_3 = new THREE.Vector3(0, 0.42, 0.18);
       const color_4 = new THREE.Vector3(0.97, 0.52, 0.15);
       const color_5 = new THREE.Vector3(0.94, 0.6, 0.22);
-      containerMat.setNewRed(0, 'uBlobColor', color_1.x, color_1.y, color_1.z);
-      containerMat.setNewRed(1, 'uBlobColor', color_2.x, color_2.y, color_2.z);
-      containerMat.setNewRed(2, 'uBlobColor', color_3.x, color_3.y, color_3.z);
-      containerMat.setNewRed(3, 'uBlobColor', color_4.x, color_4.y, color_4.z);
-      containerMat.setNewRed(3, 'uBlobColor', color_5.x, color_5.y, color_5.z);
+      containerMat.setNewColor(0, 'uBlobColor', color_1.x, color_1.y, color_1.z);
+      containerMat.setNewColor(1, 'uBlobColor', color_2.x, color_2.y, color_2.z);
+      containerMat.setNewColor(2, 'uBlobColor', color_3.x, color_3.y, color_3.z);
+      containerMat.setNewColor(3, 'uBlobColor', color_4.x, color_4.y, color_4.z);
+      containerMat.setNewColor(3, 'uBlobColor', color_5.x, color_5.y, color_5.z);
     }
   });
 
@@ -287,8 +287,8 @@ export default function Fluid(props: FluidProps) {
 
   return (
     <>
-      <directionalLight intensity={1} position={[10, 10, 10]} />
-      <ambientLight intensity={0.5} />
+      <directionalLight intensity={100000} position={[1, 1, 1]} />
+      <ambientLight intensity={200000} />
       <group ref={Body}>
         <mesh
           ref={layerInner}

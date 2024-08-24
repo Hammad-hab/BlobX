@@ -43,7 +43,7 @@ class MaterialContainer {
     const nmat = this.materials[index];
     nmat.uniforms[uniformName].value += uniformValue;
   }
-  setNewRed(
+  setNewColor(
     index: number,
     uniformColor: string,
     r: number,

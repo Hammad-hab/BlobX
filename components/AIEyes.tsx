@@ -251,6 +251,10 @@ const AIEyes = (props: AIEyesProps) => {
     EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
     EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
   }
+  function BeInterrogative() {
+    EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.5, 1.0), 0.1);
+    EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.5, 1.0), 0.1);
+  }
   //const [blink, setBlink] = useState(false);
   // setInterval(() => {
   //   // setBlink(!blink);
@@ -307,8 +311,8 @@ const AIEyes = (props: AIEyesProps) => {
         case 'Interogative':
           unLerpAngerEyebrows();
           // resetPosition();
+          BeInterrogative();
           DontBeAngry();
-          DontBeNormal();
           DontBeSerious();
           DontBeHappy();
           AIState.current = 'Interogative';
