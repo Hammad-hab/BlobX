@@ -251,7 +251,42 @@ const AIEyes = (props: AIEyesProps) => {
     EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
     EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
   }
-  useFrame(() => {
+  //const [blink, setBlink] = useState(false);
+  // setInterval(() => {
+  //   // setBlink(!blink);
+  //   console.log('blink');
+  // }, 2000);
+
+  const Fx = 50;
+  const a = 4.7;
+  const blinkTimeGap = 2;
+  const f = 9.1;
+  const q = 24.5;
+  const obPerformBlnk = (
+    object: [THREE.Object3D, THREE.Object3D],
+    elp: number,
+  ) => {
+    object[0].scale.lerp(
+      new THREE.Vector3(
+        1.0,
+        // eslint-disable-next-line prettier/prettier
+        Fx - Math.max( Math.abs(a * Math.sin(elp * blinkTimeGap) * a - f) - a,  q, ) - q,
+        1.0,
+      ),
+      0.1,
+    );
+    object[1].scale.lerp(
+      new THREE.Vector3(
+        1.0,
+        // eslint-disable-next-line prettier/prettier
+        Fx - Math.max(  Math.abs(a * Math.sin(elp * blinkTimeGap) * a - f) -  a, q,) - q,
+        1.0,
+      ),
+      0.1,
+    );
+  };
+
+  useFrame(state => {
     if (browsShouldLerp) {
       switch (props.emotion) {
         case 'Happy':
@@ -261,7 +296,12 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeNormal();
           DontBeSerious();
           BeHappy();
+
           AIState.current = 'Happy';
+          obPerformBlnk(
+            [EyeRefL_Happy.current, EyeRefR_Happy.current],
+            state.clock.getElapsedTime(),
+          );
 
           break;
         case 'Interogative':
@@ -272,7 +312,6 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeSerious();
           DontBeHappy();
           AIState.current = 'Interogative';
-
           break;
 
         case 'Serious':
@@ -282,7 +321,10 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeHappy();
           unLerpAngerEyebrows();
           AIState.current = 'Serious';
-
+          obPerformBlnk(
+            [EyeRefL_Serious.current, EyeRefR_Serious.current],
+            state.clock.getElapsedTime(),
+          );
           break;
 
         case 'Angry':
@@ -292,6 +334,10 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeHappy();
           LerpAngerEyebrows();
           AIState.current = 'Angry';
+          obPerformBlnk(
+            [EyeRefL_Angry.current, EyeRefR_Angry.current],
+            state.clock.getElapsedTime(),
+          );
           break;
 
         case 'None':
@@ -300,6 +346,10 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeSerious();
           DontBeHappy();
           unLerpAngerEyebrows();
+          obPerformBlnk(
+            [EyeRefNormalL.current, EyeRefNormalR.current],
+            state.clock.getElapsedTime(),
+          );
           AIState.current = 'None';
           break;
       }

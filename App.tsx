@@ -106,23 +106,29 @@ const App = () => {
           //  Red_Sphere_two={Red_Sphere_two ? Red_Sphere_two : 1.0}
           //  Green_Sphere_two={Green_Sphere_two ? Green_Sphere_two : 0.0}
           //  Blue_Sphere_two={Blue_Sphere_two ? Blue_Sphere_two : 0.0}
-          gesture={'None'}
+          //gesture={'None'}
+
+          gesture={'Hop'}
+        // gesture={'hopContinious'}
         // gesture={'HeadShake'}
           // gesture={'Nod'}
          // gesture={'ShakeAnger'}
         // emote={'Happy'}
-      emote={'None'}
+      //  hopContinious
+      // emote={'None'}
+      // hopContinious
       // emote={'Angry'}
-    //  emote={'Serious'}
+     emote={'Serious'}
           //  emote={'Interogative'}
           //  Red_Sphere_three={Red_Sphere_three ? Red_Sphere_three : 0.0}
           //  Green_Sphere_three={Green_Sphere_three ? Green_Sphere_three : 1.0}
           // Blue_Sphere_three={Blue_Sphere_three ? Blue_Sphere_three : 0.0}
 
-            text="Lorem dolor amet, adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            text="Lorem dolor amet, adipiscing elit, sed do ei4usmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
             rotationSpeed={0.75}
            // color={colorValue}
            enableRandomness
+           jitter={0.025}
             length={34000}
           />
         </Suspense>

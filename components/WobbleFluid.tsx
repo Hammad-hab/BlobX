@@ -17,7 +17,7 @@ interface FluidProps {
   rotationSpeed: number;
   emote: 'Angry' | 'Happy' | 'Serious' | 'Interogative' | 'None';
   length: number;
-  gesture?: 'Nod' | 'HeadShake' | 'None' | 'Wink' | 'ShakeAnger';
+  gesture?: 'Nod' | 'HeadShake' | 'None' | 'Wink' | 'ShakeAnger' | 'Hop';
   // Debug Parameters
   Red_Sphere_one?: number;
   Green_Sphere_one?: number;
@@ -32,14 +32,9 @@ interface FluidProps {
   Blue_Sphere_three?: number;
   averageColorClearout?: number;
   enableRandomness?: boolean;
+  jitter?:number
 
-  dangerousEmotionStateAccessCallback?: (
-    x: React.Dispatch<
-      React.SetStateAction<
-        'Angry' | 'Happy' | 'Serious' | 'Interogative' | 'None'
-      >
-    >,
-  ) => void;
+  hopContinious?:boolean;
   dangerousMatStateAccessCallback?: (x: MaterialContainer) => void;
 }
 
@@ -196,6 +191,18 @@ export default function Fluid(props: FluidProps) {
 
   useFrame(() => {
     /**Render loop */
+    if (props.gesture === 'Hop')
+      {
+        // const vl = Math.max(Math.abs(Math.cos(Math.PI * t*1.4)), 0.1) - 0.1;
+        const vl = Math.max(Math.pow(9.81, -t) * Math.abs(Math.sin(Math.PI * 2 * t)), 0.05) - 0.05
+        Body.current!.position.y = vl;
+        console.log(vl);
+        // Body.current!.scale.y = Math.max(vl, 0.4) + 0.5
+        t += 0.01;
+        if (props.hopContinious && t > 0.5) {
+           t = 0;
+        }
+      }
     if (!isSpeaking) {
       const target = new THREE.Vector3(0.2, 0.2, 0.2);
       const targetScale = new THREE.Vector3(1, 1, 1);
@@ -261,13 +268,13 @@ export default function Fluid(props: FluidProps) {
     );
     // Don't touch
     const rnd = props.enableRandomness ? Math.random() - 0.5 : 0.0;
-    const alpha = 0.05;
+    const alpha = props.jitter ? props.jitter : 0.05;
     if (sz === 0) {
       const targetScale = new THREE.Vector3(0.5 + rnd, 0.5 + rnd, 0.5 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
     }
     if (sz === 0.2) {
-      const targetScale = new THREE.Vector3(0.75 + rnd, 0.75 + rnd, 0.75 + rnd);
+      const targetScale = new THREE.Vector3(0.65 + rnd, 0.65 + rnd, 0.65 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
     } else if (sz === 0.5) {
       const targetScale = new THREE.Vector3(1 + rnd, 1 + rnd, 1 + rnd);
@@ -276,8 +283,6 @@ export default function Fluid(props: FluidProps) {
       const targetScale = new THREE.Vector3(1.25 + rnd, 1.25 + rnd, 1.25 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
     }
-    // Body.current!.position.y = Math.max((Math.cos(Math.PI * t)), 0.3) -0.3;
-    t += 0.01;
   });
 
   return (
@@ -332,7 +337,7 @@ export default function Fluid(props: FluidProps) {
 
         <AIEyes
           emotion={props.emote}
-          gesture={props.gesture}
+          gesture={props.gesture !== 'Hop' ? props.gesture : 'None'}
           shouldEnableEyeBrows={false}
           stareAt="None"
         />
