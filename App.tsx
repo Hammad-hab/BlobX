@@ -85,17 +85,17 @@ const Sphere_Three_Debugger = <>
           // Blue_Sphere_three={Blue_Sphere_three ? Blue_Sphere_three : 0.0}
 
         // isDebugging
-        gesture={'None'}
+        // gesture={'None'}
         //  gesture={'Hop'}
         //hopContinious
          // gesture={'hopContinious'}
-        // gesture={'HeadShake'}
-                              // gesture={'Nod'}
+        //  gesture={'HeadShake'}
+                            //  gesture={'Nod'}
         // gesture={'ShakeAnger'}
 
-      emote={'None'}
-       // emote={'Happy'}
-        // emote={'Angry'}
+        emote={'None'}
+      //  emote={'Happy'}
+        //  emote={'Angry'}
         // emote={'Serious'}
         // emote={'Interogative'}
 
@@ -109,7 +109,7 @@ WordsWorth. Understand more. Read better. Download now and transform your readin
           enableRandomness
           //testing
           jitter={0.025}
-          length={33000}
+          length={22000.0}
           />
         </Suspense>
       </Canvas>
