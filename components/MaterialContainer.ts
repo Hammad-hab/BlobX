@@ -47,7 +47,7 @@ class MaterialContainer {
     for (const mat of this.materials) {
       mat.uniforms[uniformName].value = MathUtils.lerp(
         mat.uniforms[uniformName].value.x,
-        uniformValue.x,
+        uniformValue,
         0.1,
       );
     }
@@ -62,7 +62,7 @@ class MaterialContainer {
   ) {
     const nmat = this.materials[index];
     const originalColor = nmat.uniforms[uniformColor].value;
-    const targetColor = new THREE.Vector3(r, g, b);
+    const targetColor = new Vector3(r, g, b);
     const res = originalColor.lerp(targetColor, 0.05);
     nmat.uniforms[uniformColor].value.copy(res);
     nmat.needsUpdate = true;
