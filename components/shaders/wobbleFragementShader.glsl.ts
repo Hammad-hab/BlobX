@@ -1,5 +1,5 @@
 const SHADER = /*glsl*/ `
-float rand(vec2 p){return fract(cos(dot(p,vec2(23.,2.)))*12345.);}
+    float rand(vec2 p){return fract(cos(dot(p,vec2(23.,2.)))*12345.);}
 
       #define BLACK vec3(0.0, 0.0, 0.0)
       uniform float uTime;
@@ -32,10 +32,12 @@ float rand(vec2 p){return fract(cos(dot(p,vec2(23.,2.)))*12345.);}
           smoke *= smoothstep(1.0, 0.4, vUv.y);
           
           float dist = distance(vUv, vec2(0.5)); // Calculate distance from center
-          vec3 finalColor = mix(uBlobColor* 1.5, uBlobColor , dist);
+          vec3 finalColor = mix(uBlobColor, uBlobColor* 2.0,  dist);
           vec3 oblivion = BLACK;
+
+          finalColor.rgb *= 2.0;
           
-          gl_FragColor = vec4((finalColor*max(rand(vUv), vUv.y)), (smoke*2.0) - opc);
+          gl_FragColor = vec4(finalColor, (smoke*2.0) - opc);
       }
     `;
 

@@ -32,8 +32,10 @@ interface FluidProps {
   Blue_Sphere_three?: number;
   averageColorClearout?: number;
   enableRandomness?: boolean;
-  jitter?:number
+  jitter?:number;
+  testing?:boolean;
 
+  isDebugging?:boolean;
   hopContinious?:boolean;
   dangerousMatStateAccessCallback?: (x: MaterialContainer) => void;
 }
@@ -136,13 +138,18 @@ export default function Fluid(props: FluidProps) {
     new THREE.Vector3(0.94, 0.6, 0.22),
     'uBlobColor',
   );
-  // containerMat.setUniformAt(1, 2., 'uSmokeSize');
-  // containerMat.setUniformAt(0, 0.1, 'uSmokeSize');
 
   if (props.dangerousMatStateAccessCallback) {
     props.dangerousMatStateAccessCallback(containerMat);
   }
-
+  useEffect(()=>{
+    if (props.isDebugging)
+    {
+      containerMat.setUniformAt(0,  new THREE.Vector3(props.Red_Sphere_one ? props.Red_Sphere_one : 0.86, props.Green_Sphere_one ? props.Green_Sphere_one : 0.2, props.Blue_Sphere_one ? props.Blue_Sphere_one : 0.27) , 'uBlobColor');
+      containerMat.setUniformAt(1,  new THREE.Vector3(props.Red_Sphere_two ? props.Red_Sphere_two : 0.86, props.Green_Sphere_two ? props.Green_Sphere_two : 0.2, props.Blue_Sphere_two ? props.Blue_Sphere_two : 0.27)  ,  'uBlobColor');
+      containerMat.setUniformAt(2,  new THREE.Vector3(props.Red_Sphere_three ? props.Red_Sphere_three : 0.86, props.Green_Sphere_three ? props.Green_Sphere_three : 0.2, props.Blue_Sphere_three ? props.Blue_Sphere_three : 0.27), 'uBlobColor');
+    }
+  },[containerMat, props.Blue_Sphere_one, props.Blue_Sphere_three, props.Blue_Sphere_two, props.Green_Sphere_one, props.Green_Sphere_three, props.Green_Sphere_two, props.Red_Sphere_one, props.Red_Sphere_three, props.Red_Sphere_two, props.isDebugging]);
   useFrame(() => {
 
     if (IncRadius) {
@@ -174,11 +181,13 @@ export default function Fluid(props: FluidProps) {
       const color_3 = new THREE.Vector3(0, 0.42, 0.18);
       const color_4 = new THREE.Vector3(0.97, 0.52, 0.15);
       const color_5 = new THREE.Vector3(0.94, 0.6, 0.22);
+     if (!props.testing){
       containerMat.setNewColor(0, 'uBlobColor', color_1.x, color_1.y, color_1.z);
       containerMat.setNewColor(1, 'uBlobColor', color_2.x, color_2.y, color_2.z);
       containerMat.setNewColor(2, 'uBlobColor', color_3.x, color_3.y, color_3.z);
       containerMat.setNewColor(3, 'uBlobColor', color_4.x, color_4.y, color_4.z);
       containerMat.setNewColor(3, 'uBlobColor', color_5.x, color_5.y, color_5.z);
+     }
     }
   });
 
@@ -194,7 +203,7 @@ export default function Fluid(props: FluidProps) {
     if (props.gesture === 'Hop')
       {
         // const vl = Math.max(Math.abs(Math.cos(Math.PI * t*1.4)), 0.1) - 0.1;
-        const vl = Math.max(Math.pow(9.81, -t) * Math.abs(Math.sin(Math.PI * 2 * t)), 0.05) - 0.05
+        const vl = Math.max(Math.pow(9.81, -t) * Math.abs(Math.sin(Math.PI * 2 * t)), 0.05) - 0.05;
         Body.current!.position.y = vl;
         console.log(vl);
         // Body.current!.scale.y = Math.max(vl, 0.4) + 0.5
@@ -273,14 +282,18 @@ export default function Fluid(props: FluidProps) {
       const targetScale = new THREE.Vector3(0.5 + rnd, 0.5 + rnd, 0.5 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
     }
-    if (sz === 0.2) {
-      const targetScale = new THREE.Vector3(0.65 + rnd, 0.65 + rnd, 0.65 + rnd);
+    if (sz === '0.2') {
+      console.log("PAUSE")
+      const targetScale = new THREE.Vector3(1,1,1);
+      Body.current?.scale.lerp(targetScale, alpha);
+    } else if (sz === 0.25) {
+      const targetScale = new THREE.Vector3(1.25 + rnd, 1.25 + rnd, 1.25 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
     } else if (sz === 0.5) {
-      const targetScale = new THREE.Vector3(1 + rnd, 1 + rnd, 1 + rnd);
+      const targetScale = new THREE.Vector3(1.5 + rnd, 1.5 + rnd, 1.5 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
-    } else if (sz === 1) {
-      const targetScale = new THREE.Vector3(1.25 + rnd, 1.25 + rnd, 1.25 + rnd);
+    }  else if (sz === 0.75) {
+      const targetScale = new THREE.Vector3(1.75 + rnd, 1.75 + rnd, 1.75 + rnd);
       Body.current?.scale.lerp(targetScale, alpha);
     }
   });
@@ -344,4 +357,4 @@ export default function Fluid(props: FluidProps) {
       </group>
     </>
   );
-}
+};

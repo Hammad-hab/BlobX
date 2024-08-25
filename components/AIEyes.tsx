@@ -35,6 +35,7 @@ const AIEyes = (props: AIEyesProps) => {
   }, [props.emotion, AIState]);
 
   const Face: any = useRef(null);
+  const FaceNod: any = useRef(null);
   const HeadShakeDir = useRef(1);
   const NodDir = useRef(1);
   const EyeGeometry = useMemo(
@@ -309,7 +310,7 @@ const AIEyes = (props: AIEyesProps) => {
 
           break;
         case 'Interogative':
-          unLerpAngerEyebrows();
+          // unLerpAngerEyebrows();
           // resetPosition();
           BeInterrogative();
           DontBeAngry();
@@ -323,7 +324,7 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeNormal();
           BeSerious();
           DontBeHappy();
-          unLerpAngerEyebrows();
+          // unLerpAngerEyebrows();
           AIState.current = 'Serious';
           obPerformBlnk(
             [EyeRefL_Serious.current, EyeRefR_Serious.current],
@@ -336,7 +337,7 @@ const AIEyes = (props: AIEyesProps) => {
           DontBeNormal();
           DontBeSerious();
           DontBeHappy();
-          LerpAngerEyebrows();
+          // LerpAngerEyebrows();
           AIState.current = 'Angry';
           obPerformBlnk(
             [EyeRefL_Angry.current, EyeRefR_Angry.current],
@@ -349,7 +350,7 @@ const AIEyes = (props: AIEyesProps) => {
           BeNormal();
           DontBeSerious();
           DontBeHappy();
-          unLerpAngerEyebrows();
+          // unLerpAngerEyebrows();
           obPerformBlnk(
             [EyeRefNormalL.current, EyeRefNormalR.current],
             state.clock.getElapsedTime(),
@@ -389,17 +390,17 @@ const AIEyes = (props: AIEyesProps) => {
     if (props.gesture === 'Nod') {
       // Ensure Face.current is defined
       // Check the current rotation and set the direction
-      if (Face.current.rotation.x >= 0.1) {
+      if (FaceNod.current.rotation.x >= 0.1) {
         NodDir.current = 0; // Change direction to left
-      } else if (Face.current.rotation.x <= -0.1) {
+      } else if (FaceNod.current.rotation.x <= -0.1) {
         NodDir.current = 1; // Change direction to right
       }
 
       // Apply rotation based on the current direction
       if (NodDir.current === 0) {
-        Face.current.rotation.x -= 0.01; // Rotate left
+        FaceNod.current.rotation.x -= 0.01; // Rotate left
       } else if (NodDir.current === 1) {
-        Face.current.rotation.x += 0.02; // Rotate right
+        FaceNod.current.rotation.x += 0.02; // Rotate right
       }
     }
 
@@ -410,10 +411,10 @@ const AIEyes = (props: AIEyesProps) => {
   });
 
   return (
-    <>
+    <group ref={FaceNod}>
       <group ref={Face} position={[0, 0.0, 0]}>
         {/* Eye Brows */}
-        <mesh
+        {/* <mesh
           material={EyeBrowMaterial}
           geometry={EyeBrowGeometry}
           position={[0.15, 0.1, -0.75]}
@@ -427,7 +428,7 @@ const AIEyes = (props: AIEyesProps) => {
           position={[-0.15, 0.1, -0.75]}
           ref={EyeBrowRefR}
           visible={false}
-        />
+        /> */}
 
         <mesh
           material={EyeBrowMaterial}
@@ -564,7 +565,7 @@ const AIEyes = (props: AIEyesProps) => {
         {/* <boxGeometry /> */}
         {/* <circleGeometry /> */}
       </mesh>
-    </>
+    </group>
   );
 };
 

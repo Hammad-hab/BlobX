@@ -9,11 +9,10 @@ const SHADER = /*glsl*/ `uniform float uTime;
           mat2 m = mat2(c, s, -s, c);
           return m * value;
       }
-
       void main()
       {
           vec3 newPosition = position;
-
+	  vec4 perlinTxt = texture(uPerlinTexture, uv);
           // Twist
           float twistPerlin = texture(
               uPerlinTexture,
@@ -28,7 +27,7 @@ const SHADER = /*glsl*/ `uniform float uTime;
               texture(uPerlinTexture, vec2(0.75, uTime * 0.01)).r - 0.5
           );
           windOffset *= pow(uv.y, 2.0) * 10.;
-        //  newPosition.xz += windOffset;
+          //newPosition.x += perlinTxt.;
 
           // Final position
           gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
