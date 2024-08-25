@@ -3,8 +3,7 @@
  * duplicate shaders. Most used uniform setUniformAtI
  */
 
-import {THREE} from 'expo-three';
-import {Vector3} from 'three';
+import {Vector3, MathUtils} from 'three';
 
 class MaterialContainer {
   private materials: any[];
@@ -43,6 +42,17 @@ class MaterialContainer {
     const nmat = this.materials[index];
     nmat.uniforms[uniformName].value += uniformValue;
   }
+
+  setUniformAtAll(uniformValue: any, uniformName: string) {
+    for (const mat of this.materials) {
+      mat.uniforms[uniformName].value = MathUtils.lerp(
+        mat.uniforms[uniformName].value.x,
+        uniformValue.x,
+        0.1,
+      );
+    }
+  }
+
   setNewColor(
     index: number,
     uniformColor: string,

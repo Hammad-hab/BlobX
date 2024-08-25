@@ -1,6 +1,7 @@
 const SHADER = /*glsl*/ `uniform float uTime;
       uniform sampler2D uPerlinTexture;
       uniform float uSmokeSpeed;
+      uniform vec3 uSpeachDisplacement;
       varying vec2 vUv;
       vec2 rotate2D(vec2 value, float angle)
       {
@@ -27,7 +28,9 @@ const SHADER = /*glsl*/ `uniform float uTime;
               texture(uPerlinTexture, vec2(0.75, uTime * 0.01)).r - 0.5
           );
           windOffset *= pow(uv.y, 2.0) * 10.;
-          //newPosition.x += perlinTxt.;
+          newPosition.y += abs(sin(uTime*(uSpeachDisplacement.x ))) * 0.025;
+          newPosition.z += abs(sin(uTime*(uSpeachDisplacement.x ))) * 0.025;
+          newPosition.x += abs(sin(uTime*(uSpeachDisplacement.x ))) * 0.025;
 
           // Final position
           gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);

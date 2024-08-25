@@ -9,6 +9,8 @@ const SHADER = /*glsl*/ `
       uniform float uSmokeSize;
       uniform float isAngry;
       uniform float opc;
+      uniform vec3 uSpeachDisplacement;
+
 
       void main()
       {

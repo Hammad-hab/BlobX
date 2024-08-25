@@ -109,6 +109,7 @@ export default function Fluid(props: FluidProps) {
           Color_red: new THREE.Uniform(1.0),
           isAngry: new THREE.Uniform(1.0),
           opc: new THREE.Uniform(0.05),
+	        uSpeachDisplacement: new THREE.Uniform(new THREE.Vector3(1.0, 1.0, 1.0)),
         },
         side: THREE.DoubleSide,
         transparent: true,
@@ -283,7 +284,7 @@ export default function Fluid(props: FluidProps) {
       Body.current?.scale.lerp(targetScale, alpha);
     }
     if (sz === '0.2') {
-      console.log("PAUSE")
+      console.log("PAUSE");
       const targetScale = new THREE.Vector3(1,1,1);
       Body.current?.scale.lerp(targetScale, alpha);
     } else if (sz === 0.25) {
