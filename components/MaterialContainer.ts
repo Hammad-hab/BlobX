@@ -1,6 +1,6 @@
 /**
  * A Simple data structure for storing, retriving and handling
- * duplicate shaders. Most used uniform setUniformAtI
+ * duplicate shaders efficiently.
  */
 
 import {Vector3, MathUtils} from 'three';
@@ -33,7 +33,6 @@ class MaterialContainer {
   }
 
   setUniformAt(index: number, uniformValue: any, uniformName: string) {
-    console.log('SET_UNIFORM:', uniformName);
     const nmat = this.materials[index];
     nmat.uniforms[uniformName].value = uniformValue;
   }
@@ -66,9 +65,6 @@ class MaterialContainer {
     const res = originalColor.lerp(targetColor, 0.05);
     nmat.uniforms[uniformColor].value.copy(res);
     nmat.needsUpdate = true;
-    //const nmat = this.materials[index];
-    //const OriginalColor = nmat.uniforms[uniformColor].value;
-    // OriginalColor.lerp(new THREE.Vector3(r, g, b), 1.0);
   }
 
   dampOutAtIVec(index: number, uniformName: string, alpha = 0.1) {
