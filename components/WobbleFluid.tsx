@@ -80,7 +80,7 @@ export default function Fluid(props: FluidProps) {
   let sampler = useRef(0);
   const wordsPerSecond =
     props.text.split(' ').length /
-    ((props.length === 0 ? 1000 : props.length) / 1000);
+    ((props.length === 0 ? 1000 : props.length + 1000) / 1000);
   const read_head = useMemo(
     () =>
       setInterval(() => {
@@ -140,30 +140,32 @@ export default function Fluid(props: FluidProps) {
     [perlinTexture],
   );
   /*Creating Variations of the Same material to reduce redundancy. See MaterialContainer.ts */
-  containerMat.addMaterials(atmosphereMaterial);
-  containerMat.createMatUniformVariation(
-    0,
-    new THREE.Vector3(0.86, 0.2, 0.27), //Sphere Two;
-    'uBlobColor',
-  );
-  containerMat.createMatUniformVariation(
-    //Sphere Three;
-    0,
-    new THREE.Vector3(0, 0.42, 0.18),
-    'uBlobColor',
-  );
-  containerMat.createMatUniformVariation(
-    //Sphere Four
-    0,
-    new THREE.Vector3(0.97, 0.52, 0.15),
-    'uBlobColor',
-  );
-  containerMat.createMatUniformVariation(
-    //Sphere Five
-    0,
-    new THREE.Vector3(0.94, 0.6, 0.22),
-    'uBlobColor',
-  );
+  useEffect(() => {
+    containerMat.addMaterials(atmosphereMaterial);
+    containerMat.createMatUniformVariation(
+      0,
+      new THREE.Vector3(0.86, 0.2, 0.27), //Sphere Two;
+      'uBlobColor',
+    );
+    containerMat.createMatUniformVariation(
+      //Sphere Three;
+      0,
+      new THREE.Vector3(0, 0.42, 0.18),
+      'uBlobColor',
+    );
+    containerMat.createMatUniformVariation(
+      //Sphere Four
+      0,
+      new THREE.Vector3(0.97, 0.52, 0.15),
+      'uBlobColor',
+    );
+    containerMat.createMatUniformVariation(
+      //Sphere Five
+      0,
+      new THREE.Vector3(0.94, 0.6, 0.22),
+      'uBlobColor',
+    );
+  }, [atmosphereMaterial, containerMat]);
 
   if (props.dangerousMatStateAccessCallback) {
     props.dangerousMatStateAccessCallback(containerMat);
@@ -233,9 +235,16 @@ export default function Fluid(props: FluidProps) {
         containerMat.setNewColor(0, 'uBlobColor', 1.0, 0.85, 0.0);
         containerMat.setNewColor(1, 'uBlobColor', 1.0, 0.85, 0.0);
         containerMat.setNewColor(2, 'uBlobColor', 1.0, 0.85, 0.0);
+        containerMat.setNewColor(3, 'uBlobColor', 1.0, 0.85, 0.0);
         containerMat.setNewColor(4, 'uBlobColor', 1.0, 0.85, 0.0);
+      } else if (props.emote === 'Serious') {
+        //   IncScale();
+        containerMat.setNewColor(0, 'uBlobColor', 0.74, 0.0, 0.97);
+        containerMat.setNewColor(1, 'uBlobColor', 0.74, 0.0, 0.97);
+        containerMat.setNewColor(2, 'uBlobColor', 0.74, 0.0, 0.97);
+        containerMat.setNewColor(3, 'uBlobColor', 0.74, 0.0, 0.97);
+        containerMat.setNewColor(4, 'uBlobColor', 0.74, 0.0, 0.97);
       }
-      //   DecScale();
     } else {
       const color_1 = new THREE.Vector3(0.13, 0.6, 0.89); // RETURN COLOR
       const color_2 = new THREE.Vector3(0.86, 0.2, 0.27); // RETURN COLOR
@@ -361,7 +370,7 @@ export default function Fluid(props: FluidProps) {
           material={containerMat.getMaterial(0)}
           position={[0, 0, 0]}
           rotation={[0, -4.84, -5.42]}>
-          <icosahedronGeometry args={[0.675, 50]} />
+          <icosahedronGeometry args={[0.675, 15]} />
         </mesh>
 
         <mesh
@@ -369,7 +378,7 @@ export default function Fluid(props: FluidProps) {
           material={containerMat.getMaterial(4)}
           position={[0, 0, 0]}
           rotation={[0, -4.84, -5.42]}>
-          <icosahedronGeometry args={[0.575, 50]} />
+          <icosahedronGeometry args={[0.575, 15]} />
         </mesh>
 
         <mesh
@@ -377,7 +386,7 @@ export default function Fluid(props: FluidProps) {
           material={containerMat.getMaterial(1)}
           position={[0, 0, 0]}
           rotation={[0, -9.84, -2.42]}>
-          <icosahedronGeometry args={[0.7, 50]} />
+          <icosahedronGeometry args={[0.7, 15]} />
         </mesh>
 
         <mesh
@@ -385,7 +394,7 @@ export default function Fluid(props: FluidProps) {
           material={containerMat.getMaterial(3)}
           position={[0, 0, 0]}
           rotation={[0, 0, 0]}>
-          <icosahedronGeometry args={[0.6, 50]} />
+          <icosahedronGeometry args={[0.6, 15]} />
         </mesh>
 
         <mesh
@@ -393,7 +402,7 @@ export default function Fluid(props: FluidProps) {
           material={containerMat.getMaterial(2)}
           position={[0, 0, 0]}
           rotation={[0, -6.84, -9.42]}>
-          <icosahedronGeometry args={[0.6, 50]} />
+          <icosahedronGeometry args={[0.6, 15]} />
         </mesh>
 
         <AIEyes

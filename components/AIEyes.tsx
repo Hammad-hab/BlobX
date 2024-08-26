@@ -36,7 +36,42 @@ const AIEyes = (props: AIEyesProps) => {
   const HeadShakeDir = useRef(1);
   const NodDir = useRef(1);
   const EyeGeometry = useMemo(
-    () => new THREE.CapsuleGeometry(0.035, 0.07, 32),
+    () => new THREE.CapsuleGeometry(0.035, 0.07, 8),
+    [],
+  );
+  const FaceMaterial = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        transparent: true,
+        vertexShader: `
+        varying vec2 vUv;
+        void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+        fragmentShader: `
+      varying vec2 vUv;
+      void main() {
+        // Define the center and radius of the circle
+        vec2 center = vec2(0.5, 0.5); // Center of the circle in UV space
+        float radius = 0.4;           // Radius of the circle
+
+        // Calculate the distance from the current fragment to the center
+        float dist = distance(vUv, center);
+
+        // Define a fade-out factor based on the distance from the center
+        float fade = smoothstep(radius, radius + 0.1, dist);
+
+        // Set the color of the circle
+        vec3 color = vec3(0.0, 0.0, 0.0); // Example color (orange)
+
+        // Apply the fade effect
+        gl_FragColor = vec4(color, 0.65 - fade);
+    }
+  `,
+        side: 2,
+      }),
     [],
   );
   const HappyEyeGeometry = useMemo(
@@ -329,7 +364,7 @@ const AIEyes = (props: AIEyesProps) => {
 
   return (
     <group ref={FaceNod}>
-      <group ref={Face} position={[0, 0.0, 0]}>
+      <group ref={Face} position={[0, 0.0, -0.01]}>
         {/* Eye Brows */}
 
         {/* General Eyes */}
@@ -392,41 +427,7 @@ const AIEyes = (props: AIEyesProps) => {
           ref={EyeRefL_Angry}
         />
       </group>
-      <mesh
-        material={
-          new THREE.ShaderMaterial({
-            transparent: true,
-            vertexShader: `
-                varying vec2 vUv;
-                void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-              varying vec2 vUv;
-              void main() {
-                // Define the center and radius of the circle
-                vec2 center = vec2(0.5, 0.5); // Center of the circle in UV space
-                float radius = 0.4;           // Radius of the circle
-
-                // Calculate the distance from the current fragment to the center
-                float dist = distance(vUv, center);
-
-                // Define a fade-out factor based on the distance from the center
-                float fade = smoothstep(radius, radius + 0.1, dist);
-
-                // Set the color of the circle
-                vec3 color = vec3(0.0, 0.0, 0.0); // Example color (orange)
-
-                // Apply the fade effect
-                gl_FragColor = vec4(color, 0.65 - fade);
-            }
-          `,
-            side: 2,
-          })
-        }
-        position={[0, 0, -0.1]}>
+      <mesh material={FaceMaterial} position={[0, 0, -0.1]}>
         <planeGeometry args={[1.125, 1.125]} />
       </mesh>
     </group>

@@ -3,7 +3,7 @@ const animateText = (text: string) => {
   const csize_mul = [];
   for (const sn of snt) {
     if (sn.endsWith(',') || sn.endsWith('?')) {
-      const wait = '0.2 '.repeat(3).trim().split(' ');
+      const wait = '0.2 '.repeat(2).trim().split(' ');
       csize_mul.push(...wait);
       continue;
     }

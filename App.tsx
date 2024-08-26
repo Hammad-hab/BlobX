@@ -8,6 +8,7 @@ import {useState} from 'react';
 import { Text } from 'react-native';
 
 
+
 const App = () => {
 
   const [Red_Sphere_one,set_Red_Sphere_one] = useState(1.0);
@@ -68,9 +69,10 @@ const Sphere_Three_Debugger = <>
 
 
       <Canvas
+        //frameloop="demand"
         camera={{position: [0, 0, -5]}}
         style={{backgroundColor: 'black'}}>
-        <Suspense>
+          <Suspense>
           <Fluid
           //  Red_Sphere_one={Red_Sphere_one ? Red_Sphere_one : 1.0}
           //  Green_Sphere_one={Green_Sphere_one ? Green_Sphere_one : 0.0}
@@ -95,23 +97,23 @@ const Sphere_Three_Debugger = <>
 
         emote={'None'}
       //  emote={'Happy'}
-        //  emote={'Angry'}
+          // emote={'Angry'}
         // emote={'Serious'}
         // emote={'Interogative'}
 
 
-          text="Ever felt lost in a sea of words??? Or struggled to find your next great read???
-Meet WordsWorth, your AI reading companion
-WordsWorth makes understanding difficult texts a breeze. It breaks down complex ideas into simple language, so you can focus on what matters
-But that's not all. WordsWorth knows your taste better than you do. It finds your next favorite book, saving you from endless searching.
-WordsWorth. Understand more. Read better. Download now and transform your reading experience."
+          text="AiA was an advanced artificial intelligence designed not just to assist, but to learn, grow, and evolve with its users. Unlike other AI systems, AiA had a unique capability: it could adapt its personality, knowledge, and even its communication style based on the preferences and emotions of those it interacted with. AiA became more than just a tool; it became a companion, understanding the subtle nuances of human language and emotion."
           rotationSpeed={0.75}
           enableRandomness
           //testing
           jitter={0.025}
-          length={22000.0}
+          length={5000}
           />
         </Suspense>
+        {/* <mesh>
+          <meshBasicMaterial/>
+          <boxGeometry/>
+        </mesh> */}
       </Canvas>
     </>
   );
