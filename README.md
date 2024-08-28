@@ -32,7 +32,7 @@ import { Text } from 'react-native';
 
 Slider, Text, Canvas will be installed, all the dependencies are present in the **package.json file**. The rest of the imports point towards the components, which are present in the components folder,
 
-    There are five sets of states, each state is the setter of a color, five states in one pair are the Red Blue Green Values, Each pair will change the     					color of the sphere in the sphere there are in total five smoke animation spheres, you may uncoment the following code  in line 65
+    There are five sets of states, each state is the setter of a color, five states in one pair are the Red Blue Green Values, Each pair will change the     					color of the sphere in the sphere there are in total five smoke animation spheres, you may uncoment the following code  in line 91
 
 ```js
  {/* {Sphere_One_Debugger}
@@ -44,27 +44,34 @@ Slider, Text, Canvas will be installed, all the dependencies are present in the 
  */}
 ```
 
-when uncomented the sliders will appear please
+when uncomented the sliders will appear.
 
 > **NOTE: Don't Use more than two Debuggers at the same time, don't worry nothing will break, it is not recomended because a lot of sliders will appear at once and cover the whole screen**
 
 in the comments you can see the there are the commented attributes these are the states that will be passed down to the Fluid component, just by commenting and uncommenting these parts you can controll the color values.
+
+Turn the `isDebugging` prop to true in the Fluid component.
+
+---
 
 ***Setting the Colors :***
 
 After choosing the right colors here is how to set them permanently :
 
 1) Go to the WobbleFluid.tsx file in Components Folder.
-2) Set the color in the vector  like so in the  code chunk from line 100-140:
+2) Set the color in the vector  like so in the code chunk from line 281-285:
 3) ```js
-    new THREE.Vector3(0.86, 0.2, 0.27),  
+         const color_1 = new THREE.Vector3(0.13, 0.6, 0.89); // First Sphere
+         const color_2 = new THREE.Vector3(0.86, 0.2, 0.27); // Second Sphere
+         const color_3 = new THREE.Vector3(0, 0.42, 0.18); // Third Sphere
+         const color_4 = new THREE.Vector3(0.97, 0.52, 0.15); // Fourth Sphere
+         const color_5 = new THREE.Vector3(0.94, 0.6, 0.22); // Fifth Sphere
    ```
 
 All the code at this point is thoroughly commented defining the number of the sphere each line writes to.
 
-Next go to line 180 in the else part of the if statement set the colors you set above to make them permanent.
-
-> **NOTE: Colors should not be in standard RGB form, they should be in the form of GLSL RGB (i.e they range from 0-1 instead of 0-255). You can color pick in GLSL RGB [here](> https://keiwando.com/color-picker/)**
+Next go to the useEffect at line 151 and set the colors in `createMatUniformVariation`, and change the Vector3 values to the corresponding GLSL RGB values selected above in `color_1`, `color_2` etc.
+> **NOTE: Colors should not be in standard RGB form, they should be in the form of GLSL RGB (i.e they range from 0-1 instead of 0-255). You can color pick in GLSL RGB [here](>https://keiwando.com/color-picker/)**
 
 # Attributes and Properties of the `Fluid` Component :
 

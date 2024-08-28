@@ -25,6 +25,13 @@ const App = () => {
   const [Green_Sphere_three,set_Green_Sphere_three] = useState(0.0);
   const [Blue_Sphere_three,set_Blue_Sphere_three] = useState(0.1);
 
+  const [Red_Sphere_Four,set_Red_Sphere_Four] = useState(0.0);
+  const [Green_Sphere_Four,set_Green_Sphere_Four] = useState(0.0);
+  const [Blue_Sphere_Four,set_Blue_Sphere_Four] = useState(0.1);
+
+  const [Red_Sphere_Five,set_Red_Sphere_Five] = useState(0.0);
+  const [Green_Sphere_Five,set_Green_Sphere_Five] = useState(0.0);
+  const [Blue_Sphere_Five,set_Blue_Sphere_Five] = useState(0.1);
 
   // const [Red_Sphere_three,set_Red_Sphere_Four] = useState(0.0);
   // const [Green_Sphere_three,set_Green_Sphere_Four] = useState(0.0);
@@ -61,13 +68,31 @@ const Sphere_Three_Debugger = <>
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Three Blue : ' +  Blue_Sphere_three}</Text>
     <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Green_Sphere_three}   onValueChange={set_Green_Sphere_three}/>
 </>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Sphere_Four_Debugger = <>
+<Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Four Red : ' +  Red_Sphere_Four }</Text>
+<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Red_Sphere_Four}     onValueChange={set_Red_Sphere_Four}/>
+    <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Four Green: ' +Green_Sphere_three}</Text>
+<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Blue_Sphere_Four}    onValueChange={set_Blue_Sphere_Four}/>
+<Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Four Blue : ' +  Blue_Sphere_three}</Text>
+<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Green_Sphere_Four}   onValueChange={set_Green_Sphere_Four}/>
+</>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Sphere_Five_Debugger = <>
+<Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Five Red : ' +  Red_Sphere_Five }</Text>
+<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Red_Sphere_Five}     onValueChange={set_Red_Sphere_Five}/>
+    <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Five Green: ' + Green_Sphere_Five}</Text>
+<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Blue_Sphere_Five}    onValueChange={set_Blue_Sphere_Five}/> 
+<Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Five Blue : ' +  Blue_Sphere_Five}</Text>
+<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Green_Sphere_Five}   onValueChange={set_Green_Sphere_Five}/>
+</>;
   return (
     <>
    {/* {Sphere_One_Debugger}
    {Sphere_Two_Debugger}
-   {Sphere_Three_Debugger} */}
-
-
+   {Sphere_Three_Debugger}
+  {Sphere_Four_Debugger}
+   {Sphere_Five_Debugger} */}
       <Canvas
         //frameloop="demand"
         camera={{position: [0, 0, -5]}}
@@ -86,18 +111,27 @@ const Sphere_Three_Debugger = <>
           // Green_Sphere_three={Green_Sphere_three ? Green_Sphere_three : 1.0}
           // Blue_Sphere_three={Blue_Sphere_three ? Blue_Sphere_three : 0.0}
 
-        // isDebugging
-        // gesture={'None'}
+
+          //  Red_Sphere_Four = {Red_Sphere_Four ? Red_Sphere_Four : 0.0}
+          //  Green_Sphere_Four = {Green_Sphere_Four ? Green_Sphere_Four : 1.0}
+          //  Blue_Sphere_Four = {Blue_Sphere_Four ? Blue_Sphere_Four : 0.0}
+
+          //  Red_Sphere_Five = {Red_Sphere_Five ? Red_Sphere_Five : 0.0}
+          //  Green_Sphere_Five = {Green_Sphere_Five ? Green_Sphere_Five : 1.0}
+          //  Blue_Sphere_Five = {Blue_Sphere_Five ? Blue_Sphere_Five : 0.0}
+
+        //  isDebugging
+        //  gesture={'None'}
         //  gesture={'Hop'}
-        //hopContinious
+        //  hopContinious
+
          // gesture={'hopContinious'}
         //  gesture={'HeadShake'}
-                            //  gesture={'Nod'}
-        // gesture={'ShakeAnger'}
+        //  gesture={'Nod'}
+        //  gesture={'ShakeAnger'}
 
-        emote={'None'}
       //  emote={'Happy'}
-          // emote={'Angry'}
+          emote={'Angry'}
         // emote={'Serious'}
         // emote={'Interogative'}
 
@@ -107,7 +141,7 @@ const Sphere_Three_Debugger = <>
           enableRandomness
           //testing
           jitter={0.025}
-          length={5000}
+          length={4000}
           />
         </Suspense>
         {/* <mesh>

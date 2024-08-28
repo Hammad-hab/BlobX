@@ -29,6 +29,14 @@ interface FluidProps {
   Red_Sphere_three?: number;
   Green_Sphere_three?: number;
   Blue_Sphere_three?: number;
+
+  Red_Sphere_Four?: number;
+  Green_Sphere_Four?: number;
+  Blue_Sphere_Four?: number;
+
+  Red_Sphere_Five?: number;
+  Green_Sphere_Five?: number;
+  Blue_Sphere_Five?: number;
   averageColorClearout?: number;
 
   enableRandomness?: boolean;
@@ -200,15 +208,39 @@ export default function Fluid(props: FluidProps) {
         ),
         'uBlobColor',
       );
+      containerMat.setUniformAt(
+        3,
+        new THREE.Vector3(
+          props.Red_Sphere_Four ? props.Red_Sphere_Four : 0.97,
+          props.Green_Sphere_Four ? props.Green_Sphere_Four : 0.52,
+          props.Blue_Sphere_Four ? props.Blue_Sphere_Four : 0.15,
+        ),
+        'uBlobColor',
+      );
+      containerMat.setUniformAt(
+        3,
+        new THREE.Vector3(
+          props.Red_Sphere_Five ? props.Red_Sphere_Five : 0.94,
+          props.Green_Sphere_Five ? props.Green_Sphere_Five : 0.6,
+          props.Blue_Sphere_Five ? props.Blue_Sphere_Five : 0.22,
+        ),
+        'uBlobColor',
+      );
     }
   }, [
     containerMat,
+    props.Blue_Sphere_Five,
+    props.Blue_Sphere_Four,
     props.Blue_Sphere_one,
     props.Blue_Sphere_three,
     props.Blue_Sphere_two,
+    props.Green_Sphere_Five,
+    props.Green_Sphere_Four,
     props.Green_Sphere_one,
     props.Green_Sphere_three,
     props.Green_Sphere_two,
+    props.Red_Sphere_Five,
+    props.Red_Sphere_Four,
     props.Red_Sphere_one,
     props.Red_Sphere_three,
     props.Red_Sphere_two,
