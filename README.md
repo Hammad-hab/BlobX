@@ -32,7 +32,7 @@ import { Text } from 'react-native';
 
 Slider, Text, Canvas will be installed, all the dependencies are present in the **package.json file**. The rest of the imports point towards the components, which are present in the components folder,
 
-    There are five sets of states, each state is the setter of a color, five states in one pair are the Red Blue Green Values, Each pair will change the     					color of the sphere in the sphere there are in total five smoke animation spheres, you may uncoment the following code  in line 91
+There are five sets of states, each state is the setter of a color, five states in one pair are the Red BluGreen Values, Each pair will change the color of the sphere in the sphere there are in total fivsmoke animation spheres, you may uncoment the following code  in line 91
 
 ```js
  {/* {Sphere_One_Debugger}
