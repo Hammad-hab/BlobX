@@ -8,12 +8,10 @@ import MaterialContainer from './MaterialContainer';
 import wobbleVertexShader from './shaders/wobbleVertexShader.glsl';
 import wobbleFragmentShader from './shaders/wobbleFragementShader.glsl';
 import AIEyes from './AIEyes';
-import {NativeModules} from 'react-native';
-import {analyzeAudio,} from 'react-native-audio-analyzer';
-// import ReactNativeBlobUtil from 'react-native-blob-util';
+import animateText from './TextAnimation';
 
 interface FluidProps {
-  // text: string;
+  text: string;
   rotationSpeed?: number;
   emote?: 'Angry' | 'Happy' | 'Serious' | 'Interogative' | 'None';
   length: number;
@@ -59,58 +57,19 @@ interface FluidProps {
   blinkFreq?: number;
   dangerousMatStateAccessCallback?: (x: MaterialContainer) => void;
   ignoreErrors?: boolean;
-  filepath: string;
 }
 /**
  * Main Component for adding a character into an application. See documentation (README.md) for more information regarding
  * its usage. Based on R3F
  */
 export default function Fluid(props: FluidProps) {
-  // Sound.setCategory('Playback');
   const [isSpeaking, setSpeaking] = useState(true);
   const [IncRadius, setIncRadius] = useState<boolean>(false);
-  // const [Snd, setSnd] = useState<Sound | null>(null);
-  // const [path, setPath] = useState<string>('');
-  // const start = useCallback(async () => {
-  //   try {
-  //     const response = await ReactNativeBlobUtil.config({
-  //       fileCache: true,
-  //     }).fetch('GET', props.filepath, {});
-  //     const pth = await response.path();
-  //     setPath(pth);
-  //   } catch (e) {
-  //     setPath(props.filepath);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [props.filepath]);
-
-  // useEffect(() => {
-  //   try {
-  //     start();
-  //   } catch (e) {}
-  // }, [start]);
-
   if (props.length === 0 && !props.ignoreErrors) {
     /** This is a safety check. Length of 0 can lead to division by
      * zero in other operations which might cause unexpected bugs */
     throw `[GL_EXCEPTION]: Unacceptable value, ${props.length} passed as length to Fluid component. props.length must be greater than 0. To fix this, set length to any unsigned integer greater than 1`;
   }
-  const [result, setResult] = useState<any[]>([]);
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await analyzeAudio(props.filepath, 0.1);
-        // const sound = new Sound(path, Sound.MAIN_BUNDLE, () => {
-        //   sound.play();
-        // });
-        // setSnd(sound);
-        setResult(data);
-      } catch (e) {
-        console.log('RJCT');
-      }
-    })();
-  }, [props.filepath]);
-
   const xtime = 4000;
   useEffect(() => {
     setIncRadius(true); // set to true if color is needed
@@ -127,17 +86,19 @@ export default function Fluid(props: FluidProps) {
   const layerInnerMost =
     useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(null);
   let sampler = useRef(0);
-
+  const wordsPerSecond =
+    props.text.split(' ').length /
+    ((props.length === 0 ? 1000 : props.length + 1000) / 1000);
   const read_head = useMemo(
     () =>
       setInterval(() => {
         sampler.current += 1;
-      }, 1 * 100),
-    [],
+      }, wordsPerSecond * 100),
+    [wordsPerSecond],
   );
   useEffect(() => {
     setSpeaking(true);
-  }, [props.filepath]);
+  }, [props.text, props.length]);
 
   useEffect(() => {
     const x = setTimeout(() => {
@@ -148,6 +109,7 @@ export default function Fluid(props: FluidProps) {
   }, [props.length, props, read_head]);
 
   const perlinTexture = useLoader(TextureLoader, perlin);
+  const kframes = animateText(props.text);
   const Body = useRef<THREE.Group | null>(null);
 
   if (perlinTexture instanceof THREE.Texture) {
@@ -366,7 +328,7 @@ export default function Fluid(props: FluidProps) {
 
   useEffect(() => {
     sampler.current = 0;
-  }, [props.filepath]);
+  }, [props.text]);
 
   useFrame(() => {
     const speed = props.rotationSpeed ? props.rotationSpeed : 1;
@@ -397,8 +359,10 @@ export default function Fluid(props: FluidProps) {
       return;
     }
 
-    const sz: any = result[sampler.current];
-
+    const sz = kframes[sampler.current];
+    if (sz === undefined && isSpeaking) {
+      sampler.current = 0;
+    }
     containerMat.setUniformAtI(0, 0.2 * speed * damping.x, 'uTime');
     containerMat.setUniformAtI(1, 0.1 * speed * damping.x, 'uTime');
     containerMat.setUniformAtI(2, 0.3 * speed * damping.x, 'uTime');
@@ -406,39 +370,33 @@ export default function Fluid(props: FluidProps) {
     containerMat.setUniformAtI(3, 0.25 * speed * damping.x, 'uTime');
     containerMat.setUniformAtI(4, 0.35 * speed * damping.x, 'uTime');
     // Don't touch, these are precise mathematical calculations
-    if (sz !== undefined) {
-      const targetScale = new THREE.Vector3(
-        (sz.amplitude < 100 ? 100 : sz.amplitude) / 100,
-        (sz.amplitude < 100 ? 100 : sz.amplitude) / 100,
-        (sz.amplitude < 100 ? 100 : sz.amplitude) / 100,
-      );
-      Body.current?.scale.lerp(targetScale, 0.075);
+    const rnd =
+      props.enableRandomness === undefined || props.enableRandomness
+        ? Math.random() - 0.5
+        : 0.0;
+    const alpha = props.jitter ? props.jitter : 0.05;
+    if (sz === 0) {
+      const targetScale = new THREE.Vector3(0.5 + rnd, 0.5 + rnd, 0.5 + rnd);
+      Body.current?.scale.lerp(targetScale, alpha);
     }
-    // const rnd =
-    //   props.enableRandomness === undefined || props.enableRandomness
-    //     ? Math.random() - 0.5
-    //     : 0.0;
-    // const alpha = props.jitter ? props.jitter : 0.05;
-    // if (sz === 0) {
-    // }
-    // if (sz === '0.2') {
-    //   const targetScale = new THREE.Vector3(1, 1, 1);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // } else if (sz === 0.25) {
-    //   const targetScale = new THREE.Vector3(1.25 + rnd, 1.25 + rnd, 1.25 + rnd);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // } else if (sz === 0.5) {
-    //   const targetScale = new THREE.Vector3(1.5 + rnd, 1.5 + rnd, 1.5 + rnd);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // } else if (sz === 0.75) {
-    //   const targetScale = new THREE.Vector3(1.75 + rnd, 1.75 + rnd, 1.75 + rnd);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // }
+    if (sz === '0.2') {
+      const targetScale = new THREE.Vector3(1, 1, 1);
+      Body.current?.scale.lerp(targetScale, alpha);
+    } else if (sz === 0.25) {
+      const targetScale = new THREE.Vector3(1.25 + rnd, 1.25 + rnd, 1.25 + rnd);
+      Body.current?.scale.lerp(targetScale, alpha);
+    } else if (sz === 0.5) {
+      const targetScale = new THREE.Vector3(1.5 + rnd, 1.5 + rnd, 1.5 + rnd);
+      Body.current?.scale.lerp(targetScale, alpha);
+    } else if (sz === 0.75) {
+      const targetScale = new THREE.Vector3(1.75 + rnd, 1.75 + rnd, 1.75 + rnd);
+      Body.current?.scale.lerp(targetScale, alpha);
+    }
   });
 
   return (
     <>
-      <group ref={Body} visible={result.length ? true : false}>
+      <group ref={Body}>
         <mesh
           ref={layerInner}
           material={containerMat.getMaterial(0)}

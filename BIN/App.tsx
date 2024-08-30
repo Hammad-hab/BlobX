@@ -1,34 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React, {Suspense, useCallback, useEffect} from 'react';
+import React, {Suspense} from 'react';
 import {Canvas} from '@react-three/fiber/native';
-import Fluid from './components/WobbleFluid';
+import Fluid from '../components/WobbleFluid';
 import Slider from '@react-native-community/slider';
 import {useState} from 'react';
 import { Text } from 'react-native';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import Sound from 'react-native-sound';
+
 
 
 const App = () => {
-  const [path, setPath] = useState<string>('');
-  const start = useCallback(async () => {
-    const response = await ReactNativeBlobUtil.config({
-      fileCache: true,
-    }).fetch(
-      'GET',
-      'https://github.com/Hammad-hab/sfx/raw/main/It-d%20been%20six%20months%20sinc%202.wav',
-      {},
-    );
-    const pth = await response.path();
-    // const plth = require('./The_Tragedy.mp3');
-    setPath(pth);
-  }, []);
-
-  useEffect(() => {
-      start();
-      console.log(path);
-  }, [start, path]);
 
   const [Red_Sphere_one,set_Red_Sphere_one] = useState(1.0);
   const [Green_Sphere_one,set_Green_Sphere_one] = useState(0.0);
@@ -117,8 +98,7 @@ const Sphere_Five_Debugger = <>
         camera={{position: [0, 0, -5]}}
         style={{backgroundColor: 'black'}}>
           <Suspense>
-
-        <Fluid
+          <Fluid
           //  Red_Sphere_one={Red_Sphere_one ? Red_Sphere_one : 1.0}
           //  Green_Sphere_one={Green_Sphere_one ? Green_Sphere_one : 0.0}
           //  Blue_Sphere_one={Blue_Sphere_one ? Blue_Sphere_one : 0.0}
@@ -155,15 +135,13 @@ const Sphere_Five_Debugger = <>
         // emote={'Serious'}
         // emote={'Interogative'}
 
-          // filepath={path}
-          // text="AiA was an advanced artificial intelligence designed not just to assist, but to learn, grow, and evolve with its users. Unlike other AI systems, AiA had a unique capability: it could adapt its personality, knowledge, and even its communication style based on the preferences and emotions of those it interacted with. AiA became more than just a tool; it became a companion, understanding the subtle nuances of human language and emotion."
+
+          text="AiA was an advanced artificial intelligence designed not just to assist, but to learn, grow, and evolve with its users. Unlike other AI systems, AiA had a unique capability: it could adapt its personality, knowledge, and even its communication style based on the preferences and emotions of those it interacted with. AiA became more than just a tool; it became a companion, understanding the subtle nuances of human language and emotion."
           rotationSpeed={0.75}
           enableRandomness
           //testing
-          //Enter your file path here.
-          filepath={path} // EXAMPLE: https://github.com/Hammad-hab/sfx/raw/main/It-d%20been%20six%20months%20sinc%202.wav
           jitter={0.025}
-          length={33000}
+          length={4000}
           />
         </Suspense>
         {/* <mesh>

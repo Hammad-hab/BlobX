@@ -16,6 +16,7 @@
 		7699B88040F8A987B510C191 /* libPods-blobx-blobxTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-blobx-blobxTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		89524419A63773D03EA881E8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC739D18E830535DC655A9E /* ExpoModulesProvider.swift */; };
+		19E1DFD909E94903A02BDAB9 /* The_Tragedy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6242493AE5864EAA806F3556 /* The_Tragedy.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-blobx-blobxTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blobx-blobxTests.release.xcconfig"; path = "Target Support Files/Pods-blobx-blobxTests/Pods-blobx-blobxTests.release.xcconfig"; sourceTree = "<group>"; };
 		89F1B1682F167B53CF99B198 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-blobx-blobxTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		6242493AE5864EAA806F3556 /* The_Tragedy.mp3 */ = {isa = PBXFileReference; name = "The_Tragedy.mp3"; path = "../mp3/The_Tragedy.mp3"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				AD5E72B4895B4045D7655B36 /* ExpoModulesProviders */,
+				D845377BCBC842C9B0561417 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -177,6 +180,15 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		D845377BCBC842C9B0561417 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				6242493AE5864EAA806F3556 /* The_Tragedy.mp3 */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -274,6 +286,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				19E1DFD909E94903A02BDAB9 /* The_Tragedy.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
