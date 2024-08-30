@@ -1,15 +1,13 @@
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import * as THREE from 'three';
 import {useFrame, useLoader} from '@react-three/fiber';
-import perlin from './perlin.png';
-
 import {TextureLoader} from 'expo-three';
 import MaterialContainer from './MaterialContainer';
 import wobbleVertexShader from './shaders/wobbleVertexShader.glsl';
 import wobbleFragmentShader from './shaders/wobbleFragementShader.glsl';
 import AIEyes from './AIEyes';
-import {NativeModules} from 'react-native';
-import {analyzeAudio,} from 'react-native-audio-analyzer';
+import {analyzeAudio} from 'react-native-audio-analyzer';
+// import uri from './Perlin.URI';
 // import ReactNativeBlobUtil from 'react-native-blob-util';
 
 interface FluidProps {
@@ -109,7 +107,7 @@ export default function Fluid(props: FluidProps) {
         console.log('RJCT');
       }
     })();
-  }, [props.filepath]);
+  }, [props.filepath, props.length]);
 
   const xtime = 4000;
   useEffect(() => {
@@ -146,8 +144,10 @@ export default function Fluid(props: FluidProps) {
     }, props.length);
     return () => clearTimeout(x);
   }, [props.length, props, read_head]);
-
-  const perlinTexture = useLoader(TextureLoader, perlin);
+  const perlinTexture = useLoader(
+    TextureLoader,
+    'https://raw.githubusercontent.com/Hammad-hab/sfx/main/perlin.png',
+  );
   const Body = useRef<THREE.Group | null>(null);
 
   if (perlinTexture instanceof THREE.Texture) {
@@ -438,7 +438,7 @@ export default function Fluid(props: FluidProps) {
 
   return (
     <>
-      <group ref={Body} visible={result.length ? true : false}>
+      <group ref={Body}>
         <mesh
           ref={layerInner}
           material={containerMat.getMaterial(0)}

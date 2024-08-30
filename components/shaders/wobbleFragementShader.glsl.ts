@@ -45,6 +45,7 @@ void main() {
     finalColor.rgb *= 2.0;
           
     gl_FragColor = vec4(finalColor, (smoke*2.0) - opc);
+    // gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
 /* @END FRAGMENT SHADER */`;
 

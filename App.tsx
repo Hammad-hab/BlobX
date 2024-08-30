@@ -12,7 +12,10 @@ import Sound from 'react-native-sound';
 
 const App = () => {
   const [path, setPath] = useState<string>('');
+  const [hasStarted, setHasStarted] = useState(false)
+  const [sound, setSound] = useState<Sound | null>(null)
   const start = useCallback(async () => {
+    if (path.length > 0) return
     const response = await ReactNativeBlobUtil.config({
       fileCache: true,
     }).fetch(
@@ -25,10 +28,30 @@ const App = () => {
     setPath(pth);
   }, []);
 
+  const playSound = useCallback(() => {
+    if (path && !sound) {
+      const snd = new Sound(path, '', (error) => {
+        if (error) {
+          console.log('Failed to load the sound', error);
+          return;
+        }
+        snd.play();
+      });
+      setSound(snd);
+    }
+  }, [path, sound]);
+
   useEffect(() => {
+    if (!hasStarted)
+    {
       start();
-      console.log(path);
-  }, [start, path]);
+      setHasStarted(true);
+    }
+    if (!sound) {
+      playSound();
+
+    }
+  }, [start, path, playSound, hasStarted]);
 
   const [Red_Sphere_one,set_Red_Sphere_one] = useState(1.0);
   const [Green_Sphere_one,set_Green_Sphere_one] = useState(0.0);
@@ -162,7 +185,7 @@ const Sphere_Five_Debugger = <>
           //testing
           //Enter your file path here.
           filepath={path} // EXAMPLE: https://github.com/Hammad-hab/sfx/raw/main/It-d%20been%20six%20months%20sinc%202.wav
-          jitter={0.025}
+          jitter={1.0}
           length={33000}
           />
         </Suspense>
