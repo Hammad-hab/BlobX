@@ -12,10 +12,10 @@ import Sound from 'react-native-sound';
 
 const App = () => {
   const [path, setPath] = useState<string>('');
-  const [hasStarted, setHasStarted] = useState(false)
-  const [sound, setSound] = useState<Sound | null>(null)
+  const [hasStarted, setHasStarted] = useState(false);
+  const [sound, setSound] = useState<Sound | null>(null);
   const start = useCallback(async () => {
-    if (path.length > 0) return
+    if (path.length > 0) {return;}
     const response = await ReactNativeBlobUtil.config({
       fileCache: true,
     }).fetch(
@@ -24,6 +24,7 @@ const App = () => {
       {},
     );
     const pth = await response.path();
+    console.log('LOADED!');
     // const plth = require('./The_Tragedy.mp3');
     setPath(pth);
   }, []);
@@ -35,7 +36,7 @@ const App = () => {
           console.log('Failed to load the sound', error);
           return;
         }
-        snd.play();
+        snd.play()
       });
       setSound(snd);
     }
@@ -49,7 +50,6 @@ const App = () => {
     }
     if (!sound) {
       playSound();
-
     }
   }, [start, path, playSound, hasStarted]);
 
@@ -93,20 +93,20 @@ const App = () => {
 
  // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const Sphere_Two_Debugger = <>
- 
+
  <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Two Red : ' +  Red_Sphere_two }</Text>
     <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0}    value={Red_Sphere_two}       onValueChange={set_Red_Sphere_two}/>
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Two Green : ' +  Green_Sphere_two }</Text>
     <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0}    value={Blue_Sphere_two}      onValueChange={set_Blue_Sphere_two}/>
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Two Blue : ' +  Blue_Sphere_two }</Text>
     <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0}     value={Green_Sphere_two}     onValueChange={set_Green_Sphere_two}/>
- </>
+ </>;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Sphere_Three_Debugger = <>
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Three Red : ' +  Red_Sphere_three }</Text>
     <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Red_Sphere_three}     onValueChange={set_Red_Sphere_three}/>
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Three Green: ' +Green_Sphere_three}</Text>
-    <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Blue_Sphere_three}    onValueChange={set_Blue_Sphere_three}/> 
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Three Green: ' + Green_Sphere_three}</Text>
+    <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Blue_Sphere_three}    onValueChange={set_Blue_Sphere_three}/>
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Three Blue : ' +  Blue_Sphere_three}</Text>
     <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Green_Sphere_three}   onValueChange={set_Green_Sphere_three}/>
 </>;
@@ -114,7 +114,7 @@ const Sphere_Three_Debugger = <>
 const Sphere_Four_Debugger = <>
 <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Four Red : ' +  Red_Sphere_Four }</Text>
 <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Red_Sphere_Four}     onValueChange={set_Red_Sphere_Four}/>
-    <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Four Green: ' +Green_Sphere_three}</Text>
+    <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Four Green: ' + Green_Sphere_three}</Text>
 <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Blue_Sphere_Four}    onValueChange={set_Blue_Sphere_Four}/>
 <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Four Blue : ' +  Blue_Sphere_three}</Text>
 <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Green_Sphere_Four}   onValueChange={set_Green_Sphere_Four}/>
@@ -124,7 +124,7 @@ const Sphere_Five_Debugger = <>
 <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Five Red : ' +  Red_Sphere_Five }</Text>
 <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Red_Sphere_Five}     onValueChange={set_Red_Sphere_Five}/>
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Five Green: ' + Green_Sphere_Five}</Text>
-<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Blue_Sphere_Five}    onValueChange={set_Blue_Sphere_Five}/> 
+<Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Blue_Sphere_Five}    onValueChange={set_Blue_Sphere_Five}/>
 <Text style={{fontSize: 20, fontWeight: 'bold'}}>{'  Sphere Five Blue : ' +  Blue_Sphere_Five}</Text>
 <Slider style={{width: 300, height: 50, zIndex: 10}} step={0.01} minimumValue={0.0}  maximumValue={1.0} value={Green_Sphere_Five}   onValueChange={set_Green_Sphere_Five}/>
 </>;
@@ -167,25 +167,22 @@ const Sphere_Five_Debugger = <>
         //  gesture={'None'}
         //  gesture={'Hop'}
         //  hopContinious
-
+         //   stareAt='BottomLeft'
          // gesture={'hopContinious'}
-        //  gesture={'HeadShake'}
-        //  gesture={'Nod'}
-        //  gesture={'ShakeAnger'}
-
-      //  emote={'Happy'}
-          // emote={'Angry'}
-        // emote={'Serious'}
-        // emote={'Interogative'}
-
+         //  gesture={'HeadShake'}
+         //  gesture={'Nod'}
+         //  gesture={'ShakeAnger'}
+         //  emote={'Angry'}
+        //  emote={"Happy"}
+         // emote={'Serious'}
+         // emote={'Interogative'}
           // filepath={path}
           // text="AiA was an advanced artificial intelligence designed not just to assist, but to learn, grow, and evolve with its users. Unlike other AI systems, AiA had a unique capability: it could adapt its personality, knowledge, and even its communication style based on the preferences and emotions of those it interacted with. AiA became more than just a tool; it became a companion, understanding the subtle nuances of human language and emotion."
           rotationSpeed={0.75}
-          enableRandomness
           //testing
+          sizeIncreaseDamp={150}
           //Enter your file path here.
           filepath={path} // EXAMPLE: https://github.com/Hammad-hab/sfx/raw/main/It-d%20been%20six%20months%20sinc%202.wav
-          jitter={1.0}
           length={33000}
           />
         </Suspense>

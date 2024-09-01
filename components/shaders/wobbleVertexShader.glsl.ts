@@ -2,13 +2,14 @@
  * The given file contains a GPU Vertex Shader written in GLSL.
  * Do not change unless you know what you're doing. Operations
  * in this shader are based on mathematical equations.
+ * @NOTE This is NOT JavaScript
  */
 const SHADER = /*glsl*/ `
 /* @DECLARE VERTEX SHADER */
 uniform float uTime;
 uniform sampler2D uPerlinTexture;
 uniform float uSmokeSpeed;
-uniform vec3 uSpeachDisplacement;
+uniform vec3 uSpeechDisplacement;
 varying vec2 vUv;
 vec2 rotate2D(vec2 value, float angle)
 {
@@ -35,9 +36,9 @@ void main() {
         texture(uPerlinTexture, vec2(0.75, uTime * 0.01)).r - 0.5
     );
     windOffset *= pow(uv.y, 2.0) * 10.;
-    newPosition.y += abs(sin(uTime*(uSpeachDisplacement.x ))) * 0.025;
-    newPosition.z += abs(sin(uTime*(uSpeachDisplacement.x ))) * 0.025;
-    newPosition.x += abs(sin(uTime*(uSpeachDisplacement.x ))) * 0.025;
+    newPosition.y += abs(sin(uTime*(uSpeechDisplacement.x ))) * 0.025;
+    newPosition.z += abs(sin(uTime*(uSpeechDisplacement.x ))) * 0.025;
+    newPosition.x += abs(sin(uTime*(uSpeechDisplacement.x ))) * 0.025;
 
     // Final position
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);

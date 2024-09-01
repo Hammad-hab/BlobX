@@ -1,4 +1,5 @@
 /**
+ * @module MaterialContainer
  * A Simple data structure for storing, retriving and handling
  * duplicate shaders efficiently.
  */

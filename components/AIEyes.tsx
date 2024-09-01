@@ -219,8 +219,8 @@ const AIEyes = (props: AIEyesProps) => {
     EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
   }
   function DontBeNormal() {
-    EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
-    EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
+    EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 0.0), 0.1);
+    EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 0.0), 0.1);
   }
   function BeInterrogative() {
     EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.5, 1.0), 0.1);

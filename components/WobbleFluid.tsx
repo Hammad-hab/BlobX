@@ -1,21 +1,19 @@
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import * as THREE from 'three';
 import {useFrame, useLoader} from '@react-three/fiber';
-import {TextureLoader} from 'expo-three';
 import MaterialContainer from './MaterialContainer';
 import wobbleVertexShader from './shaders/wobbleVertexShader.glsl';
 import wobbleFragmentShader from './shaders/wobbleFragementShader.glsl';
 import AIEyes from './AIEyes';
-import {analyzeAudio} from 'react-native-audio-analyzer';
-// import uri from './Perlin.URI';
-// import ReactNativeBlobUtil from 'react-native-blob-util';
+import {analyzeAudio, AmplitudeData} from 'react-native-audio-analyzer';
+import uri from './perlin.daturi';
 
 interface FluidProps {
-  // text: string;
   rotationSpeed?: number;
   emote?: 'Angry' | 'Happy' | 'Serious' | 'Interogative' | 'None';
   length: number;
   gesture?: 'Nod' | 'HeadShake' | 'None' | 'ShakeAnger' | 'Hop';
+  sizeIncreaseDamp?: number /** The maximum size it gets to before damping out to a lower factor */;
 
   // Debug Parameters
   Red_Sphere_one?: number;
@@ -39,9 +37,9 @@ interface FluidProps {
   Blue_Sphere_Five?: number;
   averageColorClearout?: number;
 
-  enableRandomness?: boolean;
   jitter?: number;
   testing?: boolean;
+  randMax?: number;
   stareAt?:
     | 'Top'
     | 'TopLeft'
@@ -58,64 +56,47 @@ interface FluidProps {
   dangerousMatStateAccessCallback?: (x: MaterialContainer) => void;
   ignoreErrors?: boolean;
   filepath: string;
+  emotionOverrideTime?: number;
+  onAnimationStart?: () => void;
 }
 /**
  * Main Component for adding a character into an application. See documentation (README.md) for more information regarding
- * its usage. Based on R3F
+ * its usage. Based on R3F.
  */
 export default function Fluid(props: FluidProps) {
-  // Sound.setCategory('Playback');
-  const [isSpeaking, setSpeaking] = useState(true);
+  const [isSpeaking, setSpeaking] = useState(false);
   const [IncRadius, setIncRadius] = useState<boolean>(false);
-  // const [Snd, setSnd] = useState<Sound | null>(null);
-  // const [path, setPath] = useState<string>('');
-  // const start = useCallback(async () => {
-  //   try {
-  //     const response = await ReactNativeBlobUtil.config({
-  //       fileCache: true,
-  //     }).fetch('GET', props.filepath, {});
-  //     const pth = await response.path();
-  //     setPath(pth);
-  //   } catch (e) {
-  //     setPath(props.filepath);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [props.filepath]);
-
-  // useEffect(() => {
-  //   try {
-  //     start();
-  //   } catch (e) {}
-  // }, [start]);
+  let damping = new THREE.Vector3(1, 1, 1);
 
   if (props.length === 0 && !props.ignoreErrors) {
     /** This is a safety check. Length of 0 can lead to division by
      * zero in other operations which might cause unexpected bugs */
     throw `[GL_EXCEPTION]: Unacceptable value, ${props.length} passed as length to Fluid component. props.length must be greater than 0. To fix this, set length to any unsigned integer greater than 1`;
   }
-  const [result, setResult] = useState<any[]>([]);
+  const [result, setResult] = useState<AmplitudeData[]>([]);
   useEffect(() => {
     (async () => {
       try {
-        const data = await analyzeAudio(props.filepath, 0.1);
-        // const sound = new Sound(path, Sound.MAIN_BUNDLE, () => {
-        //   sound.play();
-        // });
-        // setSnd(sound);
+        const data = await analyzeAudio(props.filepath, 0.01);
+        props.onAnimationStart ? props.onAnimationStart() : null;
         setResult(data);
       } catch (e) {
-        console.log('RJCT');
+        /**This is just a precautionary try...catch */
+        return;
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.filepath, props.length]);
 
-  const xtime = 4000;
+  const xtime = props.emotionOverrideTime ? props.emotionOverrideTime : 4000;
   useEffect(() => {
-    setIncRadius(true); // set to true if color is needed
+    setIncRadius(true); /* set to true if color is needed */
     const x = setTimeout(() => {
+      /* Remove the colour changes once the emotion aggressiveness is over. */
       setIncRadius(false);
     }, xtime);
     return () => clearTimeout(x);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.emote]);
 
   const layerOuter =
@@ -126,28 +107,42 @@ export default function Fluid(props: FluidProps) {
     useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(null);
   let sampler = useRef(0);
 
-  const read_head = useMemo(
-    () =>
-      setInterval(() => {
+  /**This is the sampler, i.e the read head that continuously reads from the audio stream after every 100ms */
+  const read_head = useMemo(() => {
+    if (result.length > 0) {
+      return setInterval(() => {
         sampler.current += 1;
-      }, 1 * 100),
-    [],
-  );
+      }, 1 * 100);
+    } else {
+      return -10;
+    }
+  }, [result]);
+
   useEffect(() => {
     setSpeaking(true);
   }, [props.filepath]);
 
   useEffect(() => {
-    const x = setTimeout(() => {
+    if (result.length > 0) {
+      if (!isSpeaking) {
+        /*Rewinding the damping factor if the animation has stopped running.*/
+        damping.x = 1;
+        damping.y = 1;
+        damping.z = 1;
+        setSpeaking(true);
+      }
+      const x = setTimeout(() => {
+        setSpeaking(false);
+        clearInterval(read_head);
+      }, props.length);
+      return () => clearTimeout(x);
+    } else {
       setSpeaking(false);
-      clearInterval(read_head);
-    }, props.length);
-    return () => clearTimeout(x);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.length, props, read_head]);
-  const perlinTexture = useLoader(
-    TextureLoader,
-    'https://raw.githubusercontent.com/Hammad-hab/sfx/main/perlin.png',
-  );
+
+  const perlinTexture = useLoader(THREE.TextureLoader, uri);
   const Body = useRef<THREE.Group | null>(null);
 
   if (perlinTexture instanceof THREE.Texture) {
@@ -170,12 +165,12 @@ export default function Fluid(props: FluidProps) {
           /*Data passed to the shader from the CPU, is a uniform */
           uTime: new THREE.Uniform(0),
           uPerlinTexture: new THREE.Uniform(perlinTexture),
-          uBlobColor: new THREE.Uniform(new THREE.Vector3(0.13, 0.6, 0.89)), // Sphere One;
+          uBlobColor: new THREE.Uniform(new THREE.Vector3(0.13, 0.6, 0.89)), // Sphere Color One;
           uSmokeSize: new THREE.Uniform(1.0),
           Color_red: new THREE.Uniform(1.0),
           isAngry: new THREE.Uniform(1.0),
           opc: new THREE.Uniform(0.05),
-          uSpeachDisplacement: new THREE.Uniform(
+          uSpeechDisplacement: new THREE.Uniform(
             new THREE.Vector3(1.0, 1.0, 1.0),
           ),
         },
@@ -214,8 +209,16 @@ export default function Fluid(props: FluidProps) {
   }, [atmosphereMaterial, containerMat]);
 
   if (props.dangerousMatStateAccessCallback) {
+    /**A dangerous callback called once the Material Container has been created */
     props.dangerousMatStateAccessCallback(containerMat);
   }
+
+  /**
+   * Debug UI useEffect. It is called everytime one of the RGB values of the debug spheres
+   * change. See MaterialContainer for more information regarding setUniformAt and setUniformAtI
+   *
+   * @NOTE Refrain from opening/enabling all debug sliders at once, @see App.tsx
+   */
   useEffect(() => {
     /**Only run if isDebugging is on */
     if (props.isDebugging) {
@@ -284,31 +287,29 @@ export default function Fluid(props: FluidProps) {
     props.Red_Sphere_two,
     props.isDebugging,
   ]);
+
   useFrame(() => {
     if (IncRadius) {
       if (props.emote === 'Angry') {
-        //    IncScale();
+        /**If the emotion is angry,  */
         containerMat.setNewColor(0, 'uBlobColor', 1.0, 0.0, 0.0);
         containerMat.setNewColor(1, 'uBlobColor', 1.0, 0.0, 0.0);
         containerMat.setNewColor(2, 'uBlobColor', 1.0, 0.0, 0.0);
         containerMat.setNewColor(3, 'uBlobColor', 1.0, 0.0, 0.0);
         containerMat.setNewColor(4, 'uBlobColor', 1.0, 0.0, 0.0);
       } else if (props.emote === 'Interogative') {
-        //   IncScale();
         containerMat.setNewColor(0, 'uBlobColor', 0.0, 0.0, 1.0);
         containerMat.setNewColor(1, 'uBlobColor', 0.0, 0.0, 1.0);
         containerMat.setNewColor(2, 'uBlobColor', 0.0, 0.0, 1.0);
         containerMat.setNewColor(3, 'uBlobColor', 0.0, 0.0, 1.0);
         containerMat.setNewColor(4, 'uBlobColor', 0.0, 0.0, 1.0);
       } else if (props.emote === 'Happy') {
-        //   IncScale();
         containerMat.setNewColor(0, 'uBlobColor', 1.0, 0.85, 0.0);
         containerMat.setNewColor(1, 'uBlobColor', 1.0, 0.85, 0.0);
         containerMat.setNewColor(2, 'uBlobColor', 1.0, 0.85, 0.0);
         containerMat.setNewColor(3, 'uBlobColor', 1.0, 0.85, 0.0);
         containerMat.setNewColor(4, 'uBlobColor', 1.0, 0.85, 0.0);
       } else if (props.emote === 'Serious') {
-        //   IncScale();
         containerMat.setNewColor(0, 'uBlobColor', 0.74, 0.0, 0.97);
         containerMat.setNewColor(1, 'uBlobColor', 0.74, 0.0, 0.97);
         containerMat.setNewColor(2, 'uBlobColor', 0.74, 0.0, 0.97);
@@ -316,6 +317,12 @@ export default function Fluid(props: FluidProps) {
         containerMat.setNewColor(4, 'uBlobColor', 0.74, 0.0, 0.97);
       }
     } else {
+      /**
+       * If all the emotions have been removed, restore all the default respective
+       * colors of the spheres.
+       * @NOTE Change these colour values once you alter them via the debug UI. Otherwise
+       * emotion change would resort to the default colours, not to the colours you have set.
+       */
       const color_1 = new THREE.Vector3(0.13, 0.6, 0.89); // RETURN COLOR
       const color_2 = new THREE.Vector3(0.86, 0.2, 0.27); // RETURN COLOR
       const color_3 = new THREE.Vector3(0, 0.42, 0.18); // RETURN COLOR
@@ -361,7 +368,6 @@ export default function Fluid(props: FluidProps) {
     }
   });
 
-  let damping = new THREE.Vector3(1, 1, 1);
   let t = 0.0;
 
   useEffect(() => {
@@ -369,7 +375,9 @@ export default function Fluid(props: FluidProps) {
   }, [props.filepath]);
 
   useFrame(() => {
+    /** Checking if the rotation speed has been provided (@defaultValue 1) */
     const speed = props.rotationSpeed ? props.rotationSpeed : 1;
+
     /**Render loop */
     if (props.gesture === 'Hop') {
       // Equation: max(9.81^-t x |sin(2πt)|, 0.05) - 0.05
@@ -385,6 +393,7 @@ export default function Fluid(props: FluidProps) {
       }
     }
     if (!isSpeaking) {
+      /**If the speaking animation is not running, slowly reduce the damping factor  */
       const target = new THREE.Vector3(0.2, 0.2, 0.2);
       const targetScale = new THREE.Vector3(1, 1, 1);
       damping.lerp(target, 0.01);
@@ -397,45 +406,43 @@ export default function Fluid(props: FluidProps) {
       return;
     }
 
-    const sz: any = result[sampler.current];
+    const sz: AmplitudeData = result[sampler.current];
 
     containerMat.setUniformAtI(0, 0.2 * speed * damping.x, 'uTime');
     containerMat.setUniformAtI(1, 0.1 * speed * damping.x, 'uTime');
     containerMat.setUniformAtI(2, 0.3 * speed * damping.x, 'uTime');
-
     containerMat.setUniformAtI(3, 0.25 * speed * damping.x, 'uTime');
     containerMat.setUniformAtI(4, 0.35 * speed * damping.x, 'uTime');
-    // Don't touch, these are precise mathematical calculations
+
+    /**
+     * @private
+     * @description This is the main code resposible for audio fluctuations based on the.
+     * amplitude of the waves that have been sampled @see Line:80, @function analyseAudio
+     */
     if (sz !== undefined) {
+      /**
+       * @desription if the amplitude exceeds the minimum size tolerance (1.0)
+       * reduce the effectiveness of the amplitude and also add a small bit of randomness
+       */
+      if (
+        sz.amplitude / (props.sizeIncreaseDamp ? props.sizeIncreaseDamp : 100) <
+        1.0
+      ) {
+        sz.amplitude += Math.random() * (props.randMax ? props.randMax : 50);
+      }
       const targetScale = new THREE.Vector3(
-        (sz.amplitude < 100 ? 100 : sz.amplitude) / 100,
-        (sz.amplitude < 100 ? 100 : sz.amplitude) / 100,
-        (sz.amplitude < 100 ? 100 : sz.amplitude) / 100,
+        (sz.amplitude < 125 ? 125 : sz.amplitude) /
+          (props.sizeIncreaseDamp ? props.sizeIncreaseDamp : 100),
+        (sz.amplitude < 125 ? 125 : sz.amplitude) /
+          (props.sizeIncreaseDamp ? props.sizeIncreaseDamp : 100),
+        (sz.amplitude < 125 ? 125 : sz.amplitude) /
+          (props.sizeIncreaseDamp ? props.sizeIncreaseDamp : 100),
       );
-      Body.current?.scale.lerp(targetScale, 0.075);
+      Body.current?.scale.lerp(targetScale, props.jitter ? props.jitter : 0.05);
     }
-    // const rnd =
-    //   props.enableRandomness === undefined || props.enableRandomness
-    //     ? Math.random() - 0.5
-    //     : 0.0;
-    // const alpha = props.jitter ? props.jitter : 0.05;
-    // if (sz === 0) {
-    // }
-    // if (sz === '0.2') {
-    //   const targetScale = new THREE.Vector3(1, 1, 1);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // } else if (sz === 0.25) {
-    //   const targetScale = new THREE.Vector3(1.25 + rnd, 1.25 + rnd, 1.25 + rnd);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // } else if (sz === 0.5) {
-    //   const targetScale = new THREE.Vector3(1.5 + rnd, 1.5 + rnd, 1.5 + rnd);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // } else if (sz === 0.75) {
-    //   const targetScale = new THREE.Vector3(1.75 + rnd, 1.75 + rnd, 1.75 + rnd);
-    //   Body.current?.scale.lerp(targetScale, alpha);
-    // }
   });
 
+  /** Rendering R3F geometries */
   return (
     <>
       <group ref={Body}>
