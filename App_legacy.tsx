@@ -1,47 +1,64 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React, {Suspense, useEffect, useRef} from 'react';
+import React, {Suspense, useCallback, useEffect, useRef} from 'react';
 import {Canvas} from '@react-three/fiber/native';
 import Fluid from './components/WobbleFluid';
 import Slider from '@react-native-community/slider';
 import {useState} from 'react';
-import {Text, View} from 'react-native';
+import {Text} from 'react-native';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import Sound from 'react-native-sound';
-// import { Button } from 'react-native';
+
 const App = () => {
-  // const [hasStarted, setHasStarted] = useState(false);
-  // const [emote, setEmote] = useState('None');
-  const [duration, setDuration] = useState<number>(1000);
+  const [hasStarted, setHasStarted] = useState(false);
   const [path, setPath] = useState('')
-  const [target, setTarget] = useState('https://github.com/Hammad-hab/sfx/raw/main/In%20the%20land%20of%20Flibberdoo%201.wav');
-// Sound player.
+  const [duration, setDuration] = useState<number>(null);
+  const [emote, setEmote] = useState('None');
+
   const cacheFetcher = useRef(
     ReactNativeBlobUtil.config({
       fileCache: true,
     }),
   );
+  const target = useRef('https://github.com/Hammad-hab/sfx/raw/main/In%20the%20land%20of%20Flibberdoo%201.wav');
+  const playSound = async (filePath: string) => {
+    const loadedSound = new Sound(filePath, '', (error) => {
+      if (error) {
+        console.log('ERROR', error);
+      }
+      loadedSound.play((success) => {
+        if (success) {setEmote('Happy');}
+      });
+      console.log('REFETCHING AUDIO DURATION', loadedSound.getDuration())
+      setDuration(loadedSound.getDuration() * 1000);
+      console.log(duration)
+    });
+    target.current = ('https://github.com/Hammad-hab/sfx/raw/main/The%20Tragedy.mp3');
+    console.log(target)
+    return loadedSound;
+  };
+  const start = async () => {
+    if (hasStarted) {return;}
+    console.log('Start Fetching')
+    const response = await cacheFetcher.current.fetch('GET', target.current, {});
+    console.log('Stop Fetching')
+
+    const urlPath = response.path();
+    const sound = await playSound(urlPath);
+    setHasStarted(true);
+    setPath(urlPath);
+  };
 
   useEffect(() => {
-    (async () => {
-      console.log('RUNNING!', target)
-      const response = await cacheFetcher.current.fetch('GET', target, {});
-      console.log('Completed Request')
-      const pth = response.path();
-      setPath(pth);
-      const sound = new Sound(pth, '', (error) => {
-        if (error) {
-          console.log(error);
-          return;
-        }
-
-        setDuration(sound.getDuration() * 1000);
-        sound.play();
-      });
-    })();
-  }, [target]);
-
-
+    if (target.current !== 'https://github.com/Hammad-hab/sfx/raw/main/The%20Tragedy.mp3') {
+      setTimeout(() => {
+        setHasStarted(false);
+        start();
+        console.log('RELOAD!')
+      }, 30000);
+    }
+    start();
+  }, []);
   const [Red_Sphere_one, set_Red_Sphere_one] = useState(1.0);
   const [Green_Sphere_one, set_Green_Sphere_one] = useState(0.0);
   const [Blue_Sphere_one, set_Blue_Sphere_one] = useState(0.0);
@@ -62,6 +79,9 @@ const App = () => {
   const [Green_Sphere_Five, set_Green_Sphere_Five] = useState(0.0);
   const [Blue_Sphere_Five, set_Blue_Sphere_Five] = useState(0.1);
 
+  // const [Red_Sphere_three,set_Red_Sphere_Four] = useState(0.0);
+  // const [Green_Sphere_three,set_Green_Sphere_Four] = useState(0.0);
+  // const [Blue_Sphere_three,set_Blue_Sphere_Four] = useState(0.1);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Sphere_One_Debugger = (
@@ -124,8 +144,8 @@ const App = () => {
         step={0.01}
         minimumValue={0.0}
         maximumValue={1.0}
-        value={Green_Sphere_two}
-        onValueChange={set_Green_Sphere_two}
+        value={Blue_Sphere_two}
+        onValueChange={set_Blue_Sphere_two}
       />
       <Text style={{fontSize: 20, fontWeight: 'bold'}}>
         {'  Sphere Two Blue : ' + Blue_Sphere_two}
@@ -135,8 +155,8 @@ const App = () => {
         step={0.01}
         minimumValue={0.0}
         maximumValue={1.0}
-        value={Blue_Sphere_two}
-        onValueChange={set_Blue_Sphere_two}
+        value={Green_Sphere_two}
+        onValueChange={set_Green_Sphere_two}
       />
     </>
   );
@@ -162,8 +182,8 @@ const App = () => {
         step={0.01}
         minimumValue={0.0}
         maximumValue={1.0}
-        value={Green_Sphere_three}
-        onValueChange={set_Green_Sphere_three}
+        value={Blue_Sphere_three}
+        onValueChange={set_Blue_Sphere_three}
       />
       <Text style={{fontSize: 20, fontWeight: 'bold'}}>
         {'  Sphere Three Blue : ' + Blue_Sphere_three}
@@ -173,8 +193,8 @@ const App = () => {
         step={0.01}
         minimumValue={0.0}
         maximumValue={1.0}
-        value={Blue_Sphere_three}
-        onValueChange={set_Blue_Sphere_three}
+        value={Green_Sphere_three}
+        onValueChange={set_Green_Sphere_three}
       />
     </>
   );
@@ -193,18 +213,7 @@ const App = () => {
         onValueChange={set_Red_Sphere_Four}
       />
       <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-        {'  Sphere Four Green: ' + Green_Sphere_Four}
-      </Text>
-      <Slider
-        style={{width: 300, height: 50, zIndex: 10}}
-        step={0.01}
-        minimumValue={0.0}
-        maximumValue={1.0}
-        value={Green_Sphere_Four}
-        onValueChange={set_Green_Sphere_Four}
-      />
-      <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-        {'  Sphere Four Blue : ' + Blue_Sphere_Four}
+        {'  Sphere Four Green: ' + Green_Sphere_three}
       </Text>
       <Slider
         style={{width: 300, height: 50, zIndex: 10}}
@@ -213,6 +222,17 @@ const App = () => {
         maximumValue={1.0}
         value={Blue_Sphere_Four}
         onValueChange={set_Blue_Sphere_Four}
+      />
+      <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+        {'  Sphere Four Blue : ' + Blue_Sphere_three}
+      </Text>
+      <Slider
+        style={{width: 300, height: 50, zIndex: 10}}
+        step={0.01}
+        minimumValue={0.0}
+        maximumValue={1.0}
+        value={Green_Sphere_Four}
+        onValueChange={set_Green_Sphere_Four}
       />
     </>
   );
@@ -235,11 +255,11 @@ const App = () => {
       </Text>
       <Slider
         style={{width: 300, height: 50, zIndex: 10}}
-        step={0.01}z
+        step={0.01}
         minimumValue={0.0}
         maximumValue={1.0}
-        value={Green_Sphere_Five}
-        onValueChange={set_Green_Sphere_Five}
+        value={Blue_Sphere_Five}
+        onValueChange={set_Blue_Sphere_Five}
       />
       <Text style={{fontSize: 20, fontWeight: 'bold'}}>
         {'  Sphere Five Blue : ' + Blue_Sphere_Five}
@@ -249,14 +269,13 @@ const App = () => {
         step={0.01}
         minimumValue={0.0}
         maximumValue={1.0}
-        value={Blue_Sphere_Five}
-        onValueChange={set_Blue_Sphere_Five}
+        value={Green_Sphere_Five}
+        onValueChange={set_Green_Sphere_Five}
       />
     </>
   );
   return (
     <>
-    {/* {Sphere_One_Debugger} */}
       {/* {Sphere_One_Debugger}
    {Sphere_Two_Debugger}
    {Sphere_Three_Debugger}
@@ -269,9 +288,9 @@ const App = () => {
       >
         <Suspense>
           <Fluid
-             Red_Sphere_one={Red_Sphere_one ? Red_Sphere_one : 1.0}
-             Green_Sphere_one={Green_Sphere_one ? Green_Sphere_one : 0.0}
-             Blue_Sphere_one={Blue_Sphere_one ? Blue_Sphere_one : 0.0}
+            //  Red_Sphere_one={Red_Sphere_one ? Red_Sphere_one : 1.0}
+            //  Green_Sphere_one={Green_Sphere_one ? Green_Sphere_one : 0.0}
+            //  Blue_Sphere_one={Blue_Sphere_one ? Blue_Sphere_one : 0.0}
 
             //  Red_Sphere_two={Red_Sphere_two ? Red_Sphere_two : 1.0}
             //  Green_Sphere_two={Green_Sphere_two ? Green_Sphere_two : 0.0}
@@ -298,21 +317,21 @@ const App = () => {
             //  gesture={'HeadShake'}
             //  gesture={'Nod'}
             // gesture={'ShakeAnger'}
+            emote={emote}
             // emote={'Happy'}
             // emote={'Serious'}
             //  emote={'None'}
             // emote={'Interogative'}
             // filepath={path}
-
+            // text="AiA was an advanced artificial intelligence designed not just to assist, but to learn, grow, and evolve with its users. Unlike other AI systems, AiA had a unique capability: it could adapt its personality, knowledge, and even its communication style based on the preferences and emotions of those it interacted with. AiA became more than just a tool; it became a companion, understanding the subtle nuances of human language and emotion."
             rotationSpeed={0.75}
+            //testing
             sizeIncreaseDamp={150}
             //Enter your file path here.
             filepath={path} // EXAMPLE: https://github.com/Hammad-hab/sfx/raw/main/It-d%20been%20six%20months%20sinc%202.wav
             length={duration}
             blinkFreq={2.0}
             MinFreq={1.0}
-            //isDebugging
-            //testing
           />
         </Suspense>
         {/* <mesh>
@@ -320,25 +339,6 @@ const App = () => {
           <boxGeometry/>
         </mesh> */}
       </Canvas>
-      <View style={{zIndex: 100, backgroundColor: 'red', position: 'absolute', width: '100%'}}>
-
-        {/* <Button
-        disabled   // Through this button you can experience dynamic mockup of the file setting system of the component  Warning : Don't press until the audio has finished. for more details view the documentation
-        onPress={() => setTarget('https://github.com/Hammad-hab/sfx/raw/main/In%20the%20land%20of%20Flibberdoo%201.wav')}
-        title="Audio 1 "
-        color="#841584"
-/> */}
-        {/* <Button
-        disabled // Through this button you can experience dynamic mockup of the file setting system of the component  Warning : Don't press until the audio has finished. for more details view the documentation
-        onPress={() => {
-          setTarget('https://github.com/Hammad-hab/sfx/raw/main/It-d%20been%20six%20months%20sinc%202.wav')
-          console.log('SET STATE!');
-        }}
-        title="Audio 2 "
-        color="#841584"
-
-        /> */}
-      </View>
     </>
   );
 };

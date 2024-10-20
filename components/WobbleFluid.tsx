@@ -1,3 +1,7 @@
+/**
+ * @module WobbleFluid.tsx
+ * @tutorial README.md
+ */
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import * as THREE from 'three';
 import {useFrame, useLoader} from '@react-three/fiber';
@@ -5,6 +9,7 @@ import MaterialContainer from './MaterialContainer';
 import wobbleVertexShader from './shaders/wobbleVertexShader.glsl';
 import wobbleFragmentShader from './shaders/wobbleFragementShader.glsl';
 import AIEyes from './AIEyes';
+
 import {analyzeAudio, AmplitudeData} from 'react-native-audio-analyzer';
 import uri from './perlin.daturi';
 
@@ -13,6 +18,7 @@ interface FluidProps {
   emote?: 'Angry' | 'Happy' | 'Serious' | 'Interogative' | 'None';
   length: number;
   gesture?: 'Nod' | 'HeadShake' | 'None' | 'ShakeAnger' | 'Hop';
+  maxSize?: number;
   sizeIncreaseDamp?: number /** The maximum size it gets to before damping out to a lower factor */;
 
   // Debug Parameters
@@ -53,6 +59,7 @@ interface FluidProps {
   isDebugging?: boolean;
   hopContinious?: boolean;
   blinkFreq?: number;
+  MinFreq?: number;
   dangerousMatStateAccessCallback?: (x: MaterialContainer) => void;
   ignoreErrors?: boolean;
   filepath: string;
@@ -67,6 +74,9 @@ export default function Fluid(props: FluidProps) {
   const [isSpeaking, setSpeaking] = useState(false);
   const [IncRadius, setIncRadius] = useState<boolean>(false);
   let damping = new THREE.Vector3(1, 1, 1);
+  useEffect(() => {
+    console.log(props.length);
+  }, [props.length]);
 
   if (props.length === 0 && !props.ignoreErrors) {
     /** This is a safety check. Length of 0 can lead to division by
@@ -113,8 +123,6 @@ export default function Fluid(props: FluidProps) {
       return setInterval(() => {
         sampler.current += 1;
       }, 1 * 100);
-    } else {
-      return -10;
     }
   }, [result]);
 
@@ -133,7 +141,8 @@ export default function Fluid(props: FluidProps) {
       }
       const x = setTimeout(() => {
         setSpeaking(false);
-        clearInterval(read_head);
+        clearInterval(read_head!);
+        console.log('Should Clear', props.length);
       }, props.length);
       return () => clearTimeout(x);
     } else {
@@ -430,14 +439,12 @@ export default function Fluid(props: FluidProps) {
       ) {
         sz.amplitude += Math.random() * (props.randMax ? props.randMax : 50);
       }
-      const targetScale = new THREE.Vector3(
+      const size = Math.min(
         (sz.amplitude < 125 ? 125 : sz.amplitude) /
           (props.sizeIncreaseDamp ? props.sizeIncreaseDamp : 100),
-        (sz.amplitude < 125 ? 125 : sz.amplitude) /
-          (props.sizeIncreaseDamp ? props.sizeIncreaseDamp : 100),
-        (sz.amplitude < 125 ? 125 : sz.amplitude) /
-          (props.sizeIncreaseDamp ? props.sizeIncreaseDamp : 100),
+        props.maxSize ? props.maxSize : 1.25,
       );
+      const targetScale = new THREE.Vector3(size, size, size);
       Body.current?.scale.lerp(targetScale, props.jitter ? props.jitter : 0.05);
     }
   });
@@ -487,6 +494,7 @@ export default function Fluid(props: FluidProps) {
         </mesh>
 
         <AIEyes
+          MinFreq={props.MinFreq ? props.MinFreq : 1.0}
           BlinkFreq={props.blinkFreq ? props.blinkFreq : 2.0}
           emotion={props.emote ? props.emote : 'None'}
           gesture={

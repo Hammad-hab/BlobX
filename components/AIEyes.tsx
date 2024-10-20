@@ -17,19 +17,13 @@ interface AIEyesProps {
     | 'Right'
     | 'None';
   BlinkFreq: number;
+  MinFreq: number;
 }
 
 const AIEyes = (props: AIEyesProps) => {
   /** This file is not to be edited in any curcumstances. It includes precarious thresholds */
-  const [browsShouldLerp, setLerpAccess] = useState(false);
   const [EyePosition, setEyePosition] = useState<typeof props.stareAt>('None');
   const AIState = useRef('Serious');
-
-  useEffect(() => {
-    if (AIState.current !== props.emotion) {
-      setLerpAccess(true);
-    }
-  }, [props.emotion, AIState]);
 
   const Face: any = useRef(null);
   const FaceNod: any = useRef(null);
@@ -195,43 +189,46 @@ const AIEyes = (props: AIEyesProps) => {
     EyeRefL_Angry.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
   }
   function DontBeAngry() {
-    EyeRefR_Angry.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
-    EyeRefL_Angry.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
+    EyeRefR_Angry.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
+    EyeRefL_Angry.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
   }
   function BeHappy() {
     EyeRefR_Happy.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
     EyeRefL_Happy.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
   }
   function DontBeHappy() {
-    EyeRefR_Happy.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
-    EyeRefL_Happy.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
+    EyeRefR_Happy.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
+    EyeRefL_Happy.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
   }
   function BeSerious() {
     EyeRefR_Serious.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
     EyeRefL_Serious.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
   }
   function DontBeSerious() {
-    EyeRefR_Serious.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
-    EyeRefL_Serious.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 1.0), 0.1);
+    EyeRefR_Serious.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
+    EyeRefL_Serious.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
   }
   function BeNormal() {
     EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
     EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
   }
   function DontBeNormal() {
-    EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 0.0), 0.1);
-    EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.0, 0.0), 0.1);
+    EyeRefNormalL.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
+    EyeRefNormalR.current.scale.lerp(new THREE.Vector3(0.0, 0.0, 0.0), 0.1);
   }
   function BeInterrogative() {
     EyeRefNormalL.current.scale.lerp(new THREE.Vector3(1.0, 0.5, 1.0), 0.1);
     EyeRefNormalR.current.scale.lerp(new THREE.Vector3(1.0, 0.5, 1.0), 0.1);
   }
 
-  const Fx = 50;
-  const a = 4.7;
-  const blinkTimeGap = props.BlinkFreq;
-  const f = 9.1;
-  const q = 24.5;
+  const Subtracting_Factor = 50;
+  const FrequencyController = 4.7;
+  let blinkTimeGap = 2.0; //Math.floor(props.BlinkFreq * Math.random());
+  const FrequencySubtractionFactor = 9.1;
+  const WaveFunction_Threashold = 24.5;
+  setInterval(() => {
+    blinkTimeGap = Math.floor(Math.random() * props.BlinkFreq * 2.0) + 1.0;
+  }, 2000);
   const obPerformBlnk = (
     object: [THREE.Object3D, THREE.Object3D],
     elp: number,
@@ -240,7 +237,7 @@ const AIEyes = (props: AIEyesProps) => {
       new THREE.Vector3(
         1.0,
         // eslint-disable-next-line prettier/prettier
-        Fx - Math.max( Math.abs(a * Math.sin(elp * blinkTimeGap) * a - f) - a,  q, ) - q,
+        Subtracting_Factor - Math.max( Math.abs(FrequencyController * Math.sin(elp * blinkTimeGap) * FrequencyController - FrequencySubtractionFactor) - FrequencyController,  WaveFunction_Threashold, ) - WaveFunction_Threashold,//Blink Wave Funcition of the left eye.
         1.0,
       ),
       0.1,
@@ -249,73 +246,77 @@ const AIEyes = (props: AIEyesProps) => {
       new THREE.Vector3(
         1.0,
         // eslint-disable-next-line prettier/prettier
-        Fx - Math.max(  Math.abs(a * Math.sin(elp * blinkTimeGap) * a - f) -  a, q,) - q,
+        Subtracting_Factor - Math.max(  Math.abs(FrequencyController * Math.sin(elp * blinkTimeGap) * FrequencyController - FrequencySubtractionFactor) -  FrequencyController, WaveFunction_Threashold,) - WaveFunction_Threashold,//Blink Wave Funcition of the Right eye.
         1.0,
       ),
       0.1,
     );
   };
 
+  //Emotional State switch.
   useFrame(state => {
-    if (browsShouldLerp) {
-      switch (props.emotion) {
-        case 'Happy':
-          DontBeAngry();
-          DontBeNormal();
-          DontBeSerious();
-          BeHappy();
+    switch (props.emotion) {
+      case 'Happy':
+        DontBeAngry();
+        DontBeNormal();
+        DontBeSerious();
+        BeHappy();
 
-          AIState.current = 'Happy';
-          obPerformBlnk(
-            [EyeRefL_Happy.current, EyeRefR_Happy.current],
-            state.clock.getElapsedTime(),
-          );
+        AIState.current = 'Happy';
+        obPerformBlnk(
+          [EyeRefL_Happy.current, EyeRefR_Happy.current],
+          state.clock.getElapsedTime(),
+        );
 
-          break;
-        case 'Interogative':
-          BeInterrogative();
-          DontBeAngry();
-          DontBeSerious();
-          DontBeHappy();
-          AIState.current = 'Interogative';
-          break;
+        break;
+      case 'Interogative':
+        BeInterrogative();
+        DontBeAngry();
+        DontBeSerious();
+        DontBeHappy();
+        DontBeNormal();
+        AIState.current = 'Interogative';
+        obPerformBlnk(
+          [EyeRefNormalL.current, EyeRefNormalR.current],
+          state.clock.getElapsedTime(),
+        );
+        break;
 
-        case 'Serious':
-          DontBeAngry();
-          DontBeNormal();
-          BeSerious();
-          DontBeHappy();
-          AIState.current = 'Serious';
-          obPerformBlnk(
-            [EyeRefL_Serious.current, EyeRefR_Serious.current],
-            state.clock.getElapsedTime(),
-          );
-          break;
+      case 'Serious':
+        DontBeAngry();
+        DontBeNormal();
+        DontBeHappy();
+        BeSerious();
+        AIState.current = 'Serious';
+        obPerformBlnk(
+          [EyeRefL_Serious.current, EyeRefR_Serious.current],
+          state.clock.getElapsedTime(),
+        );
+        break;
 
-        case 'Angry':
-          BeAngry();
-          DontBeNormal();
-          DontBeSerious();
-          DontBeHappy();
-          AIState.current = 'Angry';
-          obPerformBlnk(
-            [EyeRefL_Angry.current, EyeRefR_Angry.current],
-            state.clock.getElapsedTime(),
-          );
-          break;
+      case 'Angry':
+        BeAngry();
+        DontBeNormal();
+        DontBeSerious();
+        DontBeHappy();
+        AIState.current = 'Angry';
+        obPerformBlnk(
+          [EyeRefL_Angry.current, EyeRefR_Angry.current],
+          state.clock.getElapsedTime(),
+        );
+        break;
 
-        case 'None':
-          DontBeAngry();
-          BeNormal();
-          DontBeSerious();
-          DontBeHappy();
-          obPerformBlnk(
-            [EyeRefNormalL.current, EyeRefNormalR.current],
-            state.clock.getElapsedTime(),
-          );
-          AIState.current = 'None';
-          break;
-      }
+      case 'None':
+        DontBeAngry();
+        BeNormal();
+        DontBeSerious();
+        DontBeHappy();
+        obPerformBlnk(
+          [EyeRefNormalL.current, EyeRefNormalR.current],
+          state.clock.getElapsedTime(),
+        );
+        AIState.current = 'None';
+        break;
     }
   });
   useFrame((state: any) => {
@@ -368,20 +369,24 @@ const AIEyes = (props: AIEyesProps) => {
         {/* Eye Brows */}
 
         {/* General Eyes */}
-
+        {/* Normal Eyes (No emotions) */}
         <mesh
+          // Left Eye
           geometry={EyeGeometry}
           position={[0.15, 0.06, -0.7]}
           material={EyeMaterial}
           ref={EyeRefNormalL}
         />
         <mesh
+          //Right Eye
           geometry={EyeGeometry}
           position={[-0.15, 0.06, -0.7]}
           material={EyeMaterial}
           ref={EyeRefNormalR}
         />
+        {/* Happy Eyes  */}
         <mesh
+          // Left Eye
           geometry={HappyEyeGeometry}
           position={[0.15, 0, -0.7]}
           scale={new THREE.Vector3(0.001, 0.001, 0.001)}
@@ -389,42 +394,48 @@ const AIEyes = (props: AIEyesProps) => {
           ref={EyeRefL_Happy}
         />
         <mesh
+          // Right Eye
           geometry={HappyEyeGeometry}
           position={[-0.15, 0, -0.7]}
           scale={new THREE.Vector3(0.001, 0.001, 0.001)}
           material={EyeMaterial}
           ref={EyeRefR_Happy}
         />
+        {/* Serious Eyes  */}
         <mesh
+          // Left Eye
           geometry={SeriousEyeGeometry}
-          position={[-0.15, 0.06, -0.7]}
+          position={[0.15, 0.06, -0.7]}
           scale={new THREE.Vector3(0.01, 0.01, 0.01)}
           material={EyeMaterial}
           ref={EyeRefL_Serious}
         />
         <mesh
+          // Right Eye
           geometry={SeriousEyeGeometry}
-          position={[0.15, 0.06, -0.7]}
+          position={[-0.15, 0.06, -0.7]}
           scale={new THREE.Vector3(0.01, 0.01, 0.01)}
           material={EyeMaterial}
           ref={EyeRefR_Serious}
         />
-
+        {/* Angry Eyes */}
         <mesh
+          // Left Eye
           //rotateX={Math.PI / 2}
           geometry={AnrgyEyeGeometry_R}
           position={[0.15, 0.06, -0.7]}
-          scale={new THREE.Vector3(0.01, 0.01, 0.01)}
+          //scale={new THREE.Vector3(0.01, 0.01, 0.01)}
           material={EyeMaterial}
-          ref={EyeRefR_Angry}
+          ref={EyeRefL_Angry}
         />
 
         <mesh
+          // Right Eye
           geometry={AnrgyEyeGeometry_L}
           position={[-0.15, 0.06, -0.7]}
-          scale={new THREE.Vector3(0.01, 0.01, 0.01)}
+          //scale={new THREE.Vector3(0.01, 0.01, 0.01)}
           material={EyeMaterial}
-          ref={EyeRefL_Angry}
+          ref={EyeRefR_Angry}
         />
       </group>
       <mesh material={FaceMaterial} position={[0, 0, -0.1]}>

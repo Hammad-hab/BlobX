@@ -8,18 +8,10 @@ BlobX is a Pure React Native Project that creates an animated fluid-like charact
 - Ability to set text, rotation speed, emotion, and length of animation
 - Supports emotions: Angry, Happy, Serious, Interrogative
 - Supports gestures: Nod, HeadShake, ShakeAnger
-- Eye movements and Blinking.
+- Eye movements in Nine different directions and Randomized natural Blinking.
 - Customizable color settings
-- Randomness option for added variation
 
-## Installation
-
-1. Clone the repository:
-   ```bash
-    git clone https://github.com/your-username/blobby.git
-   ```
-
-## Debug UI
+## Color Debug UI
 
 ```js
 import React, {Suspense} from 'react';
@@ -32,7 +24,7 @@ import { Text } from 'react-native';
 
 Slider, Text, Canvas will be installed, all the dependencies are present in the **package.json file**. The rest of the imports point towards the components, which are present in the components folder,
 
-There are five sets of states, each state is the setter of a color, five states in one pair are the Red BluGreen Values, Each pair will change the color of the sphere in the sphere there are in total fivsmoke animation spheres, you may uncoment the following code  in line 91
+There are five sets of states, each state is the setter of a color, five states in one pair are the Red BluGreen Values, Each pair will change the color of the sphere in the sphere there are in total fivsmoke animation spheres, you may uncoment the following code  in line 259
 
 ```js
  {/* {Sphere_One_Debugger}
@@ -52,6 +44,9 @@ in the comments you can see the there are the commented attributes these are the
 
 Turn the `isDebugging` prop to true in the Fluid component.
 
+Turn the **testing** prop to true in the Fluid component.
+
+
 ---
 
 ***Setting the Colors :***
@@ -59,7 +54,7 @@ Turn the `isDebugging` prop to true in the Fluid component.
 After choosing the right colors here is how to set them permanently :
 
 1) Go to the WobbleFluid.tsx file in Components Folder.
-2) Set the color in the vector  like so in the code chunk from line 281-285:
+2) Set the color in the vector  like so in the code chunk from line 335-339:
 3) ```js
          const color_1 = new THREE.Vector3(0.13, 0.6, 0.89); // First Sphere
          const color_2 = new THREE.Vector3(0.86, 0.2, 0.27); // Second Sphere
@@ -70,14 +65,15 @@ After choosing the right colors here is how to set them permanently :
 
 All the code at this point is thoroughly commented defining the number of the sphere each line writes to.
 
-Next go to the useEffect at line 151 and set the colors in `createMatUniformVariation`, and change the Vector3 values to the corresponding GLSL RGB values selected above in `color_1`, `color_2` etc.
+Next go to the useEffect at line 193 and set the colors in `createMatUniformVariation`, and change the Vector3 values to the corresponding GLSL RGB values selected above in `color_1`, `color_2` etc. if the  prevoius values still show up when you activate the debug ui, you can set the colors respectivly in the useEffect values in line 231. for a more deep setting, you can also set the same values in the color states in the App component starting from line 45 but that would not be significant.
+
 > **NOTE: Colors should not be in standard RGB form, they should be in the form of GLSL RGB (i.e they range from 0-1 instead of 0-255). You can color pick in GLSL RGB [here](>https://keiwando.com/color-picker/)**
 
 # Attributes and Properties of the `Fluid` Component :
 
-* #### **Text (`text`, Required):**
+* #### **filepath (`filepath`, Required):**
 
-  This is the text that you have to provide, the animations that are wobble,radius fluctuations, color movements, are dependent on the text that is provided through the props, this text will be the text that the your  AI voice component will use to generate voice both the things may be played simultaneously to give the thought voice effect. This text must be in String format.
+  This is the audio file that you have to provide, the animations that are wobble,radius fluctuations, color movements, are dependent on the audio that is provided through the props, this audio will be the audio that the your  AI voice component will use to speak. both the things may be played simultaneously to give the thought voice effect. This filepath must be in String format.
 * #### **Rotation Speed ( `rotationSpeed`, Optional ):**
 
   Rotation speed is the value that will let you controll how agressively or how calmly do you want the animation to be. However the value set currently is the best, this statement was made on the basis of experimentation.
@@ -91,7 +87,13 @@ Next go to the useEffect at line 151 and set the colors in `createMatUniformVari
   `prop.length` should never be zero since it is used in many mathematical operations throughout the component. Setting it to zero will raise errors while causing
 * ### Blink Frequency (`blinkFreq`):
 
-  This value input will allow you to controll how frequently the character will blink, the higer the blink value the more it
+  This value input will allow you to controll how frequently the character will blink, the higer the blink value the more it.
+* #### Minimum Frequency  (MinFreq):
+
+  This is the minium frequency of the blink, the minimum time it will take to blink in the randomised function.
+* ### maxSize (`maxSize`):
+
+  The Maximum size that can be reached during the fluctuation Note: this is a sensitive value small changes will result in high changes. max value: 2.0, default: 1.25
 * ### Gestures ( `gesture` ) :
 
   The gestures are the special effect that have been added: this prop is a string and can recive any of the folowing inputs :
@@ -100,7 +102,7 @@ Next go to the useEffect at line 151 and set the colors in `createMatUniformVari
   1. `None` will return to normal.
   2. `HeadShake`.
   3. `Nod`.
-  4. ` ShakeAnger`.
+  4. `ShakeAnger`.
   5. `Hop`.
 
   Another attribtue associated with `Hop` is `hopContinious` which is a a boolean value that will make the character to jump without stoping unless the value is fliped to false.
@@ -111,7 +113,7 @@ Next go to the useEffect at line 151 and set the colors in `createMatUniformVari
 
   1. `Angry`
   2. `Happy`
-  3. `None` will return to normal.
+  3. `None` (will return to normal).
   4. `Serious`
   5. `Interogative`
 * ### Stare At (`stareAt`):
@@ -128,13 +130,35 @@ Next go to the useEffect at line 151 and set the colors in `createMatUniformVari
   7. `Left`
   8. `Right`
   9. `None`
+* ### Ignore Errors (`ignoreErrors`)
+
+  If set to true, the `Fluid` component will ignore all errors from the Fluid. NOT RECOMMENDED.
+* ### `dangerousMatStateAccessCallback`
+
+  A function callback called once the MaterialContainer is created. It gives you first hand access to all
+  the materials used by the program.
+  **Type**: `(x: MaterialContainer) => void`
+  It's called dangerous because it can introduce memory leaks since you are asserting a callback into the
+  main material execution stream.
+* ### `randMax`
+
+  A numerical prop that describes the largest random number that can be generated or obtained by the voice
+  animation. Basically it is used to immitate small voice imperfections which get smoothed out once you lower
+  the `jitter`
+* ### `emotionOverrideTime`
+
+  The amount of time that the component should wait before overwritting any emotion's colour effects.
+  **Default**: 1
 
 ## Files and Code
 
 1. `MaterialContainer.ts`: Contains a simple data structure for handling and managing multiple `shaderMaterials` efficiently to ensure that the app remains performant and mantainably
 2. `AIEyes.tsx`: Contains code for the Eyes of the Character. It is used by `WobbleFluid.tsx`
-3. `TextAnimation.ts`: Contains a function `animateText` which is used for generating animation keyframes
-4. `perlin.png`: Important image containing pre-calculated noise and mathematical output of `Perlin Noise`. It is used extensively for rendering the shadows and smoke. ***DO NOT DELETE***
-5. `/shaders/`:
+3. `perlin.daturi.ts`: Important file containing pre-calculated noise and mathematical output of `Perlin Noise`. It is used extensively for rendering the shadows and smoke. ***DO NOT DELETE***
+4. `/shaders/`:
    1. `wobbleFragmentShader.glsl.ts`: Contains the main fragment shader that is run on the GPU in order to render the material of the Fluid.
    2. `wobbleVertexShader.glsl.ts`: Contains the main vertex shader run on the GPU for rendering the geometry of the Fluid.
+
+#### Screen Buttons :
+
+these buttons when enabled basically set the new uri of audio, don't press the button untill the audio has finished, if you do the state will rerender twice and play two sounds at the same time, this is not a bug, since in the app, when the second audio is set the first will have already finished, that is how you can observe how the component will behave when file path changes.
